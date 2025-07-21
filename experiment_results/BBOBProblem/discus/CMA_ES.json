@@ -1,0 +1,22 @@
+{
+    "best_fitness": [
+        6445370.5,
+        796921.1875
+    ],
+    "best_fitness_in_generation": [
+        6445370.5,
+        796921.1875
+    ],
+    "gen_time_sec": [
+        0.06398797035217285,
+        0.1279759407043457
+    ],
+    "generation_counter": [
+        0,
+        1
+    ],
+    "mean_fitness_in_generation": [
+        16282208.0,
+        6088736.0
+    ]
+}
