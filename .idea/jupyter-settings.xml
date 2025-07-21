@@ -6,7 +6,7 @@
         <entry key="$PROJECT_DIR$/.idea/evolution-strategy-baselines-comparison.iml">
           <value>
             <JupyterConnectionParameters>
-              <option name="argv" value="jupyter notebook --no-browser --port=45631 --ip=0.0.0.0" />
+              <option name="argv" value="notebook --no-browser --ip=0.0.0.0 " />
               <option name="managed" value="true" />
               <option name="sdkName" value="" />
             </JupyterConnectionParameters>

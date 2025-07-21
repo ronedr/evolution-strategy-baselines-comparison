@@ -4,7 +4,6 @@ import time
 
 import jax
 import numpy as np
-import plotly.graph_objects as go
 from evosax.algorithms.base import EvolutionaryAlgorithm
 from evosax.problems import Problem
 
@@ -58,7 +57,7 @@ class Experiment:
 
         end_time = time.time()
         runtime = end_time - start_time
-        metrics = self._update_metrics(metrics, {"gen_time_sec": runtime})
+        metrics = self._update_metrics(metrics, {"gen_time_sec": runtime, "mean_fitness": fitness.mean()})
 
         # if self._print_progress and metrics["generation_counter"][-1] % 50 == 0:
         #     print(
@@ -71,24 +70,3 @@ class Experiment:
             if metric != "generation_counter" and metric != "gen_time_sec":
                 metrics[metric] = -metrics[metric] if self._minimize_fitness else metrics[metric]
         return {**metrics, **update_metrics}
-
-
-def compare(fn_name: str, algorithms: list[str], y_graph: str, x_graph: str, results_dir_path: str):
-    fig = go.Figure()
-    for algorithm in algorithms:
-        with open(f"{results_dir_path}/{fn_name}/{algorithm}.pickle", "rb") as f:
-            metrics_es = pickle.load(f)
-            fig.add_trace(go.Scatter(
-                x=metrics_es[x_graph],
-                y=metrics_es[y_graph],
-                mode='lines+markers',
-                name=algorithm
-            ))
-    fig.update_layout(
-        title=f'{y_graph} per {x_graph} on {fn_name} function.',
-        xaxis_title=f'{x_graph}',
-        yaxis_title=f'{y_graph}',
-        legend_title='Algorithms',
-        template='plotly_white'
-    )
-    fig.show()

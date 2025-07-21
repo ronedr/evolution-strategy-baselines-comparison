@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="Black">
+    <option name="sdkName" value="Remote Python 3.10.16 (sftp://ronedr@132.72.180.90:22/mnt/new_home/ronedr/.conda/envs/ronedr_es_env/bin/python)" />
+  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (evolution-strategy-baselines-comparison)" project-jdk-type="Python SDK" />
 </project>

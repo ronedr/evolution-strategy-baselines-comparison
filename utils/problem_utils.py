@@ -6,7 +6,6 @@ from evosax.problems.vision.torchvision import TorchVisionProblem
 
 
 def get_problem_name(problem: Problem):
-    problem_name = None
     if isinstance(problem, GymnaxProblem) or isinstance(problem, BraxProblem):
         problem_name = problem.env_name
     elif isinstance(problem, BBOBProblem):
