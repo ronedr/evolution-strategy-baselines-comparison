@@ -1,5 +1,5 @@
+import json
 import os
-import pickle
 from typing import Union
 
 from plotly import graph_objects as go
@@ -10,13 +10,13 @@ def compare(results_dir_path: str, folder_path_problem: str, y_graph: str, x_gra
     if algorithms is None or algorithms == "*":
         algorithms = os.listdir(results_dir_path + "/" + folder_path_problem)
     else:
-        algorithms = [f"{a}.pickle" for a in algorithms]
+        algorithms = [f"{a}.json" for a in algorithms]
 
     fig = go.Figure()
     for algorithm in algorithms:
-        with open(f"{results_dir_path}/{folder_path_problem}/{algorithm}", "rb") as f:
+        with open(f"{results_dir_path}/{folder_path_problem}/{algorithm}", "r") as f:
             try:
-                metrics_es = pickle.load(f)
+                metrics_es = json.load(f)
             except:
                 continue
             fig.add_trace(go.Scatter(

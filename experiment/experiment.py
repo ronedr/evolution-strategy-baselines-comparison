@@ -1,3 +1,4 @@
+import json
 import os
 import pickle
 import time
@@ -42,8 +43,8 @@ class Experiment:
         os.makedirs(folder_path, exist_ok=True)
 
         cpu_metrics = to_numpy(metrics)
-        with open(f"{folder_path}/{self._algorithm.__class__.__name__}.pickle", "wb") as f:
-            pickle.dump(cpu_metrics, f, protocol=pickle.HIGHEST_PROTOCOL)
+        with open(f"{folder_path}/{self._algorithm.__class__.__name__}.json", "w") as f:
+            json.dump(cpu_metrics, f, indent=4)
 
     def _step(self, carry, key):
         state, params, problem_state = carry
