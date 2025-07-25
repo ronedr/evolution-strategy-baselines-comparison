@@ -20,7 +20,7 @@ def get_problem_name(problem: Problem):
     return f"{problem.__class__.__name__}/{problem_name}"
 
 
-def get_problem_action_space(env_name: str):
+def get_problem_action_size(env_name: str):
     if env_name in list(brax_envs._envs.keys()):
         return brax_envs._envs[env_name]().action_size
     elif env_name in gymnax.registered_envs:
