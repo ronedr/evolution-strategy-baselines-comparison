@@ -26,6 +26,9 @@ def get_problem_action_space(env_name: str):
     elif env_name in gymnax.registered_envs:
         env, env_params = gymnax.make(env_name)
         action_space = env.action_space(env_params)
-        return action_space.n
+        if hasattr(action_space, "n"):
+            return action_space.n
+        else:
+            return int(action_space.shape[0])
     else:
         raise Exception("No found problem name!!")

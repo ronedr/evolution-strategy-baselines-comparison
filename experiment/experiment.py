@@ -12,6 +12,7 @@ from gymnasium import spaces
 from utils.jax_utils import to_list
 from utils.problem_utils import get_problem_name
 
+
 class Experiment:
     def __init__(self, key: float, problem: Problem, algorithm: EvolutionaryAlgorithm, results_dir_path: str,
                  print_progress: bool = False, minimize_fitness=False):
@@ -77,10 +78,9 @@ class Experiment:
         # 2. Clip to action bounds if applicable
         action_space = getattr(self._problem, "action_space", None)
         if isinstance(action_space, spaces.Box):
-            low, high = action_space.low, action_space.high
-            population = jnp.clip(population, low, high)
+            population = jnp.clip(population, action_space.low, action_space.high)
 
-        # 3. Evaluate candidates (handles RL, BBOB, MNIST, etc.)
+        # 3. Evaluate candidates (handles Brax, RL, BBOB, MNIST, etc.)
         fitness, problem_state, _ = self._problem.eval(key_eval, population, problem_state)
         if self._minimize_fitness:
             fitness = -fitness
