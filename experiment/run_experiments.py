@@ -29,5 +29,5 @@ def run_experiment_permutations(problems: List[Problem], es_dict: dict, num_gene
         compare(results_dir_path=result_dir, folder_path_problem=get_problem_name(problem), y_graph="best_fitness",
                 x_graph="generation_counter", algorithms="*")
 
-        compare(results_dir_path=result_dir, folder_path_problem=get_problem_name(problem), y_graph="best_fitness",
-                x_graph="gen_time_sec", algorithms="*")
+        compare(results_dir_path=result_dir, folder_path_problem=get_problem_name(problem), y_graph="gen_time_sec",
+                x_graph="generation_counter", algorithms="*")
