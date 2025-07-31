@@ -25,9 +25,3 @@ def run_experiment_permutations(problems: List[Problem], es_dict: dict, num_gene
             minimize_fitness = isinstance(problem, GymnaxProblem) or isinstance(problem, BraxProblem)
             Experiment(key, problem, es, results_dir_path=result_dir, minimize_fitness=minimize_fitness).run(
                 num_generations=num_generations)
-
-        compare(results_dir_path=result_dir, folder_path_problem=get_problem_name(problem), y_graph="best_fitness",
-                x_graph="generation_counter", algorithms="*")
-
-        compare(results_dir_path=result_dir, folder_path_problem=get_problem_name(problem), y_graph="gen_time_sec",
-                x_graph="generation_counter", algorithms="*")
