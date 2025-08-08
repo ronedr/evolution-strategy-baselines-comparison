@@ -14,9 +14,12 @@ from utils.problem_utils import get_problem_name
 
 
 class Experiment:
-    def __init__(self, key: float, problem: Problem, algorithm: EvolutionaryAlgorithm, results_dir_path: str,
-                 print_progress: bool = False, minimize_fitness=False):
-        self._key = key
+    METRIC_KEYS = ['best_fitness', 'gen_time_sec', 'best_fitness_in_generation', 'mean_fitness_in_generation',
+                   'generation_counter']
+
+    def __init__(self, problem: Problem, algorithm: EvolutionaryAlgorithm, results_dir_path: str,
+                 print_progress: bool = False, minimize_fitness=False, seed: int = 0):
+        self._seed = seed
         self._problem = problem
         self._algorithm = algorithm
         self._results_dir_path = results_dir_path
@@ -25,7 +28,7 @@ class Experiment:
 
     def run(self, num_generations: int):
         # Split off main RNG key
-        key, subkey = jax.random.split(self._key)
+        key, subkey = jax.random.split(self._seed)
 
         # Initialize ES algorithm state
         state = self._algorithm.init(subkey, self._algorithm.solution, self._algorithm.default_params)
@@ -57,13 +60,15 @@ class Experiment:
         self._save_result(metrics)
         return metrics
 
+    def get_experiment_path_file(self):
+        folder_path = f"{self._results_dir_path}/{get_problem_name(self._problem)}/{self._algorithm.__class__.__name__}"
+        os.makedirs(folder_path, exist_ok=True)
+        return f"{folder_path}/{self._seed}.json"
+
     def _save_result(self, metrics):
         # Save to a .json file
-        folder_path = f"{self._results_dir_path}/{get_problem_name(self._problem)}"
-        os.makedirs(folder_path, exist_ok=True)
-
         cpu_metrics = to_list(metrics)
-        with open(f"{folder_path}/{self._algorithm.__class__.__name__}.json", "w") as f:
+        with open(self.get_experiment_path_file(), "w") as f:
             json.dump(cpu_metrics, f, indent=4)
 
     def _step(self, carry, key):
@@ -82,25 +87,24 @@ class Experiment:
 
         # 3. Evaluate candidates (handles Brax, RL, BBOB, MNIST, etc.)
         fitness, problem_state, _ = self._problem.eval(key_eval, population, problem_state)
-        if self._minimize_fitness:
-            fitness = -fitness
+        fitness = -fitness if self._minimize_fitness else fitness
 
         # 4. Update ES state and collect algorithm-specific metrics
         state, metrics = self._algorithm.tell(key_tell, population, fitness, state, params)
 
         # 5. Add custom metrics: mean fitness and runtime
         metrics = self._update_metrics(metrics, {
-            "mean_fitness": float(fitness.mean()),
+            "best_fitness_in_generation": float(fitness.mean()),
             "gen_time_sec": time.time() - start
         })
 
         return (state, params, problem_state), metrics
 
     def _update_metrics(self, metrics, update_metrics):
-        for metric in list(metrics.keys()):
-            if "solution" in metric or "norm" in metric or metric == "mean":
-                del metrics[metric]
-            elif metric != "generation_counter" and metric != "gen_time_sec":
-                metrics[metric] = -metrics[metric] if self._minimize_fitness else metrics[metric]
+        metrics = {**metrics, **update_metrics}
+        metrics = {k: -metrics[k] if 'fitness' in k and self._minimize_fitness else metrics[k] for k in
+                   Experiment.METRIC_KEYS if k in metrics}
+        return metrics
 
-        return {**metrics, **update_metrics}
+    def has_run(self):
+        return os.path.exists(self.get_experiment_path_file())

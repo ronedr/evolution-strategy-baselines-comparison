@@ -7,21 +7,28 @@ from evosax.problems.rl.brax import BraxProblem
 from evosax.problems.rl.gymnax import GymnaxProblem
 from tqdm import tqdm
 
-from experiment.compare_results import compare
 from experiment.experiment import Experiment
-from utils.problem_utils import get_problem_name
 
 
 def run_experiment_permutations(problems: List[Problem], es_dict: dict, num_generations: int, population_size: int,
-                                seed: int, result_dir: str):
+                                seed: int, result_dir: str, run_again_if_exist: bool = False):
     for problem in problems:
         key = jax.random.key(seed)
         key, subkey = jax.random.split(key)
         solution = problem.sample(subkey)
-
         for es_name in tqdm(es_dict, desc="Running ES algorithms"):
-            ES = algorithms[es_name]
-            es = ES(population_size=population_size, solution=solution, **es_dict[es_name])
-            minimize_fitness = isinstance(problem, GymnaxProblem) or isinstance(problem, BraxProblem)
-            Experiment(key, problem, es, results_dir_path=result_dir, minimize_fitness=minimize_fitness).run(
-                num_generations=num_generations)
+            es_algorithm = algorithms[es_name](population_size=population_size,
+                                               solution=solution,
+                                               **es_dict[es_name])
+            experiment = Experiment(problem=problem,
+                                    algorithm=es_algorithm,
+                                    results_dir_path=result_dir,
+                                    minimize_fitness=isinstance(problem, GymnaxProblem) or isinstance(problem,
+                                                                                                      BraxProblem),
+                                    seed=seed)
+
+            if not experiment.has_run() or run_again_if_exist:
+                print(f"running the experiment ... [{experiment.get_experiment_path_file()}]")
+                experiment.run(num_generations=num_generations)
+            else:
+                print(f"there is experiment results. [{experiment.get_experiment_path_file()}]")
