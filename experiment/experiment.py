@@ -28,8 +28,8 @@ class Experiment:
 
     def run(self, num_generations: int):
         # Split off main RNG key
-        key, subkey = jax.random.split(self._seed)
-
+        key = jax.random.PRNGKey(self._seed)
+        key, subkey = jax.random.split(key)
         # Initialize ES algorithm state
         state = self._algorithm.init(subkey, self._algorithm.solution, self._algorithm.default_params)
 
