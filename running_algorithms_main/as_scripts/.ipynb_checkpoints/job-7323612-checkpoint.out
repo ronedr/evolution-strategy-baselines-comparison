@@ -1,0 +1,7 @@
+Mon 13 Oct 2025 13:30:59 IDT
+
+SLURM_JOBID:		 7323612
+SLURM_JOB_NODELIST:	 ise-cpu256-09 
+
+Successfully loaded: sphere
+Loading Problems ..:   0%|                                                              | 0/24 [00:00<?, ?it/s]

@@ -1,0 +1,13 @@
+global_task,specific_task,algo,config_id,final_mean,final_std,final_median,auc_mean,norm_final,norm_auc
+GymnaxProblem,Acrobot-v1,CMA_ES,config_1,58.0,1.4142135623730951,58.0,59301.75,0.9999999999995,0.9999999999999996
+GymnaxProblem,Acrobot-v1,CMA_ES,config_2,58.0,1.4142135623730951,58.0,58441.25,0.9999999999995,0.5742206828302818
+GymnaxProblem,Acrobot-v1,CMA_ES,config_3,57.0,0.0,57.0,58426.25,0.49999999999975,0.5667986145472536
+GymnaxProblem,Acrobot-v1,SimpleES,config_1,56.0,0.0,56.0,57280.75,0.0,0.0
+GymnaxProblem,Acrobot-v1,SimpleES,config_2,56.0,0.0,56.0,58902.25,0.0,0.8023255813953485
+GymnaxProblem,Acrobot-v1,SimpleES,config_3,56.5,0.7071067811865476,56.5,57382.75,0.249999999999875,0.050470064324591765
+GymnaxProblem,CartPole-v1,CMA_ES,config_1,-500.0,0.0,-500.0,-497578.75,0.0,0.35591133004926084
+GymnaxProblem,CartPole-v1,CMA_ES,config_2,-500.0,0.0,-500.0,-498012.25,0.0,0.0
+GymnaxProblem,CartPole-v1,CMA_ES,config_3,-500.0,0.0,-500.0,-497833.25,0.0,0.14696223316912962
+GymnaxProblem,CartPole-v1,SimpleES,config_1,-500.0,0.0,-500.0,-496845.75,0.0,0.9577175697865346
+GymnaxProblem,CartPole-v1,SimpleES,config_2,-500.0,0.0,-500.0,-496794.25,0.0,0.9999999999999992
+GymnaxProblem,CartPole-v1,SimpleES,config_3,-500.0,0.0,-500.0,-497249.25,0.0,0.6264367816091949

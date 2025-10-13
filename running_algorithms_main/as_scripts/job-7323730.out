@@ -1,0 +1,7 @@
+Mon 13 Oct 2025 13:37:34 IDT
+
+SLURM_JOBID:		 7323730
+SLURM_JOB_NODELIST:	 ise-cpu256-15 
+
+Successfully loaded: MNIST
+Loading Problems ..:   0%|                                                               | 0/4 [00:00<?, ?it/s]
