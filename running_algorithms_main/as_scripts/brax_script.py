@@ -5,8 +5,9 @@ sys.path.append('/home/ronedr/evolution-strategy-baselines-comparison')
 ## Extract the es_algorithms that we want to run in this job.
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument('--es_algorithms', nargs='+', help='List of es_algorithms that we want to run in this job', required=True)
+parser.add_argument('--es_algorithms', help="List of es_algorithms that we want to run in this job, example: 'PGPE,Open_ES,ASEBO'", required=True)
 args = parser.parse_args()
+es_algorithms = args.es_algorithms.split(",")
 
 ## imports.
 import jax
@@ -51,7 +52,7 @@ es_dict = {
 }
 
 # take only the es_algorithms we insert as arg.
-running_es = {es: es_dict[es] for es in args.es_algorithms if es in es_dict}
+running_es = {es: es_dict[es] for es in es_algorithms if es in es_dict}
 
 for env_name in tqdm(problems_brax_envs, desc="Loading Problems .."):
     action_num, out_fn = get_problem_settings(env_name)

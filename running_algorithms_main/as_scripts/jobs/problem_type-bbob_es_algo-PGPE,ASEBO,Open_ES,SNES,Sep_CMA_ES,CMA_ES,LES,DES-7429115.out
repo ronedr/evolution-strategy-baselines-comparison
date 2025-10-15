@@ -1,0 +1,41 @@
+Thu 16 Oct 2025 01:24:44 IDT
+
+SLURM_JOBID:		 7429115
+SLURM_JOB_NODELIST:	 ise-pheno-08 
+
+configuration parmas running: problem_type=bbob es_algorithms=PGPE,ASEBO,Open_ES,SNES,Sep_CMA_ES,CMA_ES,LES,DES
+Successfully loaded: sphere
+Loading Problems ..:   0%|                                                   | 0/24 [00:00<?, ?it/s]
+there is experiment results. [../../results/BBOBProblem/sphere/PGPE/0]
+there is experiment results. [../../results/BBOBProblem/sphere/PGPE/1]
+there is experiment results. [../../results/BBOBProblem/sphere/PGPE/2]
+there is experiment results. [../../results/BBOBProblem/sphere/PGPE/3]
+there is experiment results. [../../results/BBOBProblem/sphere/PGPE/4]
+Running ES algorithms:   0%|                                                  | 0/8 [00:00<?, ?it/s][A
+running the experiment ... [../../results/BBOBProblem/sphere/ASEBO/0]
+Generation 016 | Mean fitness (Test): nan
+Generation 032 | Mean fitness (Test): nan
+Generation 048 | Mean fitness (Test): nan
+Generation 064 | Mean fitness (Test): nan
+Generation 080 | Mean fitness (Test): nan
+Generation 096 | Mean fitness (Test): nan
+Generation 112 | Mean fitness (Test): nan
+Generation 128 | Mean fitness (Test): nan
+Generation 144 | Mean fitness (Test): nan
+Generation 160 | Mean fitness (Test): nan
+Generation 176 | Mean fitness (Test): nan
+Generation 192 | Mean fitness (Test): nan
+Generation 208 | Mean fitness (Test): nan
+Generation 224 | Mean fitness (Test): nan
+Generation 240 | Mean fitness (Test): nan
+Generation 256 | Mean fitness (Test): nan
+Generation 272 | Mean fitness (Test): nan
+Generation 288 | Mean fitness (Test): nan
+Generation 304 | Mean fitness (Test): nan
+Generation 320 | Mean fitness (Test): nan
+Generation 336 | Mean fitness (Test): nan
+Generation 352 | Mean fitness (Test): nan
+Generation 368 | Mean fitness (Test): nan
+Generation 384 | Mean fitness (Test): nan
+Generation 400 | Mean fitness (Test): nan
+Generation 416 | Mean fitness (Test): nan

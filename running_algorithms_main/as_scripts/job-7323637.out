@@ -1,9 +1,0 @@
-Mon 13 Oct 2025 13:31:30 IDT
-
-SLURM_JOBID:		 7323637
-SLURM_JOB_NODELIST:	 cs-6000-01 
-
-Loading Problems ..:   0%|                                                               | 0/4 [00:00<?, ?it/s]/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/site-packages/jax/_src/ops/scatter.py:93: FutureWarning: scatter inputs have incompatible types: cannot safely cast value from dtype=int32 to dtype=bool with jax_numpy_dtype_promotion='standard'. In future JAX releases this will result in an error.
-  warnings.warn(
-Successfully loaded: Asterix-MinAtar
-
