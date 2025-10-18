@@ -1,0 +1,34 @@
+Fri 17 Oct 2025 00:17:59 IDT
+
+SLURM_JOBID:		 7494503
+SLURM_JOB_NODELIST:	 cs-6000-04 
+
+configuration parmas running: problem_type=vision es_algorithms=PGPE,ASEBO,Open_ES,SNES,Sep_CMA_ES,CMA_ES,LES,DES
+Successfully loaded: MNIST
+Loading Problems ..:   0%|                                                               | 0/4 [00:00<?, ?it/s]
+running the experiment ... [../../results/TorchVisionProblem/MNIST/PGPE/0]
+Generation 016 | Mean fitness (Test): 8.35 | Mean Accuracy (Test): 0.05
+Generation 032 | Mean fitness (Test): 12.39 | Mean Accuracy (Test): 0.06
+Generation 048 | Mean fitness (Test): 14.68 | Mean Accuracy (Test): 0.12
+Generation 064 | Mean fitness (Test): 14.34 | Mean Accuracy (Test): 0.10
+Generation 080 | Mean fitness (Test): 15.75 | Mean Accuracy (Test): 0.08
+Generation 096 | Mean fitness (Test): 16.78 | Mean Accuracy (Test): 0.09
+Generation 112 | Mean fitness (Test): 15.26 | Mean Accuracy (Test): 0.07
+Generation 128 | Mean fitness (Test): 13.18 | Mean Accuracy (Test): 0.08
+Generation 144 | Mean fitness (Test): 11.52 | Mean Accuracy (Test): 0.14
+Generation 160 | Mean fitness (Test): 10.00 | Mean Accuracy (Test): 0.09
+Generation 176 | Mean fitness (Test): 6.66 | Mean Accuracy (Test): 0.11
+Generation 192 | Mean fitness (Test): 6.24 | Mean Accuracy (Test): 0.09
+Generation 208 | Mean fitness (Test): 3.34 | Mean Accuracy (Test): 0.12
+Generation 224 | Mean fitness (Test): 2.34 | Mean Accuracy (Test): 0.13
+Generation 240 | Mean fitness (Test): 2.23 | Mean Accuracy (Test): 0.19
+Generation 256 | Mean fitness (Test): 2.28 | Mean Accuracy (Test): 0.16
+Generation 272 | Mean fitness (Test): 2.26 | Mean Accuracy (Test): 0.16
+Generation 288 | Mean fitness (Test): 2.31 | Mean Accuracy (Test): 0.13
+Generation 304 | Mean fitness (Test): 2.36 | Mean Accuracy (Test): 0.08
+Generation 320 | Mean fitness (Test): 2.38 | Mean Accuracy (Test): 0.07
+Generation 336 | Mean fitness (Test): 2.34 | Mean Accuracy (Test): 0.08
+Generation 352 | Mean fitness (Test): 2.39 | Mean Accuracy (Test): 0.06
+Generation 368 | Mean fitness (Test): 2.39 | Mean Accuracy (Test): 0.11
+Generation 384 | Mean fitness (Test): 2.35 | Mean Accuracy (Test): 0.09
+Generation 400 | Mean fitness (Test): 2.39 | Mean Accuracy (Test): 0.08

@@ -1,4 +1,15 @@
-## add to sys the main folder.
+# === Runtime safety flags MUST be set before importing jax ===
+import os
+os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
+os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = ".85"
+# allow fallback conv algos and lower autotune aggressiveness
+os.environ["XLA_FLAGS"] = (os.environ.get("XLA_FLAGS", "") +
+                           " --xla_gpu_strict_conv_algorithm_picker=false"
+                           " --xla_gpu_autotune_level=1")
+# optional, can help avoid flaky autotune paths
+os.environ["TF_CUDNN_DETERMINISTIC"] = "1"
+
+# === add to sys the main folder. ===
 import sys
 sys.path.append('/home/ronedr/evolution-strategy-baselines-comparison')
 
@@ -10,6 +21,7 @@ args = parser.parse_args()
 es_algorithms = args.es_algorithms.split(",")
 
 ## imports.
+import gc
 import jax
 import optax
 from tqdm import tqdm
@@ -34,8 +46,7 @@ es_dict = {
         "optimizer": optax.adam(learning_rate=0.02),
     },
     "ASEBO": {
-        "optimizer": optax.adam(learning_rate=0.01),
-        "fitness_shaping_fn": standardize_fitness_shaping_fn
+        "optimizer": optax.adam(learning_rate=0.01)
     },
     "LES": {
         "optimizer": optax.adam(learning_rate=0.01)
@@ -46,7 +57,6 @@ es_dict = {
     "SNES": {},
     "Sep_CMA_ES": {},
     "CMA_ES": {},
-    "LES": {},
     "DES": {},
     # "EvoTF_ES": {},
 }
@@ -79,3 +89,11 @@ for env_name in tqdm(problems_brax_envs, desc="Loading Problems .."):
     except Exception as e:
         print("Failed to load:", env_name, e)
         continue
+    finally:
+        # aggressively drop references and compiled executables between tasks
+        try:
+            del problem
+        except NameError:
+            pass
+        jax.clear_caches()
+        gc.collect()
