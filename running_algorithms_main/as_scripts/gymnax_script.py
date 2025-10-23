@@ -46,9 +46,7 @@ es_dict = {
     "ASEBO": {
         "optimizer": optax.adam(learning_rate=0.01)
     },
-    "LES": {
-        "optimizer": optax.adam(learning_rate=0.01)
-    },
+    "LES": {},
     "Open_ES": {    
         "optimizer": optax.adam(learning_rate=0.05)
     },

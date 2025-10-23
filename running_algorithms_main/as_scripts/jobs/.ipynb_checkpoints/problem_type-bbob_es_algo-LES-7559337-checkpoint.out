@@ -1,0 +1,6 @@
+Sat 18 Oct 2025 23:20:43 IDT
+
+SLURM_JOBID:		 7559337
+SLURM_JOB_NODELIST:	 ise-cpu256-01 
+
+configuration parmas running: problem_type=bbob es_algorithms=LES

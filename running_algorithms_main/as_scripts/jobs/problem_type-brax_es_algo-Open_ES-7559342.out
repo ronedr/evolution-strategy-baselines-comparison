@@ -1,0 +1,180 @@
+Sun 19 Oct 2025 14:26:25 IDT
+
+SLURM_JOBID:		 7559342
+SLURM_JOB_NODELIST:	 ee-l40s-01 
+
+configuration parmas running: problem_type=brax es_algorithms=Open_ES
+Loading Problems ..:   0%|          | 0/12 [00:00<?, ?it/s]/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/site-packages/brax/io/mjcf.py:480: UserWarning: Brax System, piplines and environments are not actively being maintained. Please see MJX for a well maintained JAX-based physics engine: https://github.com/google-deepmind/mujoco/tree/main/mjx. For a host of environments that use MJX, see: https://github.com/google-deepmind/mujoco_playground.
+  warnings.warn(
+E1019 14:26:38.652401 3160735 hlo_lexer.cc:443] Failed to parse int literal: 1986902096214075708017
+Successfully loaded: ant
+
+there is experiment results. [../../results/BraxProblem/ant/Open_ES/0]
+there is experiment results. [../../results/BraxProblem/ant/Open_ES/1]
+there is experiment results. [../../results/BraxProblem/ant/Open_ES/2]
+running the experiment ... [../../results/BraxProblem/ant/Open_ES/3]
+Generation 016 | Mean fitness (Test): -46.72
+Generation 032 | Mean fitness (Test): -9.72
+Generation 048 | Mean fitness (Test): -12.95
+Generation 064 | Mean fitness (Test): -14.44
+Generation 080 | Mean fitness (Test): -57.39
+Generation 096 | Mean fitness (Test): -40.82
+Generation 112 | Mean fitness (Test): -19.34
+Generation 128 | Mean fitness (Test): -41.34
+Generation 144 | Mean fitness (Test): -7.81
+Generation 160 | Mean fitness (Test): -91.41
+Generation 176 | Mean fitness (Test): -17.76
+Generation 192 | Mean fitness (Test): -38.90
+Generation 208 | Mean fitness (Test): -32.41
+Generation 224 | Mean fitness (Test): -12.83
+Generation 240 | Mean fitness (Test): -67.04
+Generation 256 | Mean fitness (Test): -12.11
+Generation 272 | Mean fitness (Test): -17.79
+Generation 288 | Mean fitness (Test): -65.58
+Generation 304 | Mean fitness (Test): -8.33
+Generation 320 | Mean fitness (Test): -34.92
+Generation 336 | Mean fitness (Test): -11.80
+Generation 352 | Mean fitness (Test): -228.36
+Generation 368 | Mean fitness (Test): -7.59
+Generation 384 | Mean fitness (Test): -10.45
+Generation 400 | Mean fitness (Test): -8.69
+Generation 416 | Mean fitness (Test): -9.40
+Generation 432 | Mean fitness (Test): -10.06
+Generation 448 | Mean fitness (Test): -7.53
+Generation 464 | Mean fitness (Test): -11.79
+Generation 480 | Mean fitness (Test): -18.17
+Generation 496 | Mean fitness (Test): -22.27
+Generation 512 | Mean fitness (Test): -16.43
+Generation 528 | Mean fitness (Test): -65.98
+Generation 544 | Mean fitness (Test): -11.52
+Generation 560 | Mean fitness (Test): -13.98
+Generation 576 | Mean fitness (Test): -13.41
+Generation 592 | Mean fitness (Test): -49.29
+Generation 608 | Mean fitness (Test): -12.03
+Generation 624 | Mean fitness (Test): -8.99
+Generation 640 | Mean fitness (Test): -43.37
+Generation 656 | Mean fitness (Test): -47.84
+Generation 672 | Mean fitness (Test): -5.83
+Generation 688 | Mean fitness (Test): -43.38
+Generation 704 | Mean fitness (Test): -15.71
+Generation 720 | Mean fitness (Test): -19.27
+Generation 736 | Mean fitness (Test): -8.25
+Generation 752 | Mean fitness (Test): -5.82
+Generation 768 | Mean fitness (Test): -12.46
+Generation 784 | Mean fitness (Test): -7.04
+Generation 800 | Mean fitness (Test): -37.95
+Generation 816 | Mean fitness (Test): -11.31
+Generation 832 | Mean fitness (Test): -35.48
+Generation 848 | Mean fitness (Test): -8.33
+Generation 864 | Mean fitness (Test): -8.52
+Generation 880 | Mean fitness (Test): -14.49
+Generation 896 | Mean fitness (Test): -11.81
+Generation 912 | Mean fitness (Test): -22.92
+Generation 928 | Mean fitness (Test): -8.14
+Generation 944 | Mean fitness (Test): -7.03
+Generation 960 | Mean fitness (Test): -11.96
+Generation 976 | Mean fitness (Test): -23.38
+Generation 992 | Mean fitness (Test): -11.17
+Generation 1008 | Mean fitness (Test): -9.72
+Generation 1024 | Mean fitness (Test): -15.52
+Generation 1040 | Mean fitness (Test): -11.65
+Generation 1056 | Mean fitness (Test): -12.06
+Generation 1072 | Mean fitness (Test): -18.01
+Generation 1088 | Mean fitness (Test): -7.19
+Generation 1104 | Mean fitness (Test): -44.01
+Generation 1120 | Mean fitness (Test): -12.65
+Generation 1136 | Mean fitness (Test): -4.97
+Generation 1152 | Mean fitness (Test): -6.35
+Generation 1168 | Mean fitness (Test): -12.67
+Generation 1184 | Mean fitness (Test): -14.68
+Generation 1200 | Mean fitness (Test): -7.51
+Generation 1216 | Mean fitness (Test): -9.67
+Generation 1232 | Mean fitness (Test): -11.56
+Generation 1248 | Mean fitness (Test): -5.47
+Generation 1264 | Mean fitness (Test): -9.09
+Generation 1280 | Mean fitness (Test): -9.87
+Generation 1296 | Mean fitness (Test): -13.36
+Generation 1312 | Mean fitness (Test): -9.88
+Generation 1328 | Mean fitness (Test): -6.44
+Generation 1344 | Mean fitness (Test): -7.56
+Generation 1360 | Mean fitness (Test): -9.25
+Generation 1376 | Mean fitness (Test): -10.39
+Generation 1392 | Mean fitness (Test): -6.28
+Generation 1408 | Mean fitness (Test): -11.26
+Generation 1424 | Mean fitness (Test): -6.12
+Generation 1440 | Mean fitness (Test): -55.77
+Generation 1456 | Mean fitness (Test): -8.16
+Generation 1472 | Mean fitness (Test): -11.99
+Generation 1488 | Mean fitness (Test): -6.29
+Generation 1504 | Mean fitness (Test): -12.00
+Generation 1520 | Mean fitness (Test): -37.72
+Generation 1536 | Mean fitness (Test): -5.24
+Generation 1552 | Mean fitness (Test): -4.63
+Generation 1568 | Mean fitness (Test): -6.24
+Generation 1584 | Mean fitness (Test): -9.47
+Generation 1600 | Mean fitness (Test): -8.53
+Generation 1616 | Mean fitness (Test): -83.30
+Generation 1632 | Mean fitness (Test): -9.47
+Generation 1648 | Mean fitness (Test): -15.59
+Generation 1664 | Mean fitness (Test): -8.69
+Generation 1680 | Mean fitness (Test): -6.58
+Generation 1696 | Mean fitness (Test): -5.32
+Generation 1712 | Mean fitness (Test): -7.12
+Generation 1728 | Mean fitness (Test): -5.83
+Generation 1744 | Mean fitness (Test): -20.82
+Generation 1760 | Mean fitness (Test): -10.88
+Generation 1776 | Mean fitness (Test): -8.14
+Generation 1792 | Mean fitness (Test): -5.50
+Generation 1808 | Mean fitness (Test): -8.79
+Generation 1824 | Mean fitness (Test): -5.20
+Generation 1840 | Mean fitness (Test): -16.33
+Generation 1856 | Mean fitness (Test): -7.71
+Generation 1872 | Mean fitness (Test): -18.04
+Generation 1888 | Mean fitness (Test): -9.50
+Generation 1904 | Mean fitness (Test): -72.42
+Generation 1920 | Mean fitness (Test): -10.82
+Generation 1936 | Mean fitness (Test): -5.14
+Generation 1952 | Mean fitness (Test): -6.30
+Generation 1968 | Mean fitness (Test): -35.93
+Generation 1984 | Mean fitness (Test): -13.85
+Generation 2000 | Mean fitness (Test): -6.60
+running the experiment ... [../../results/BraxProblem/ant/Open_ES/4]
+Generation 016 | Mean fitness (Test): -40.59
+Generation 032 | Mean fitness (Test): -63.90
+Generation 048 | Mean fitness (Test): -57.63
+Generation 064 | Mean fitness (Test): -32.61
+Generation 080 | Mean fitness (Test): -34.13
+Generation 096 | Mean fitness (Test): -30.72
+Generation 112 | Mean fitness (Test): -40.36
+Generation 128 | Mean fitness (Test): -28.88
+Generation 144 | Mean fitness (Test): -27.92
+Generation 160 | Mean fitness (Test): -12.20
+Generation 176 | Mean fitness (Test): -10.98
+Generation 192 | Mean fitness (Test): -15.46
+Generation 208 | Mean fitness (Test): -35.52
+Generation 224 | Mean fitness (Test): -28.11
+Generation 240 | Mean fitness (Test): -10.11
+Generation 256 | Mean fitness (Test): -9.95
+Generation 272 | Mean fitness (Test): -9.58
+Generation 288 | Mean fitness (Test): -7.25
+Generation 304 | Mean fitness (Test): -10.03
+Generation 320 | Mean fitness (Test): -8.51
+Generation 336 | Mean fitness (Test): -10.76
+Generation 352 | Mean fitness (Test): -48.95
+Generation 368 | Mean fitness (Test): -8.81
+Generation 384 | Mean fitness (Test): -17.42
+Generation 400 | Mean fitness (Test): -11.71
+Generation 416 | Mean fitness (Test): -17.50
+Generation 432 | Mean fitness (Test): -13.71
+Generation 448 | Mean fitness (Test): -20.58
+Generation 464 | Mean fitness (Test): -12.08
+Generation 480 | Mean fitness (Test): -19.81
+Generation 496 | Mean fitness (Test): -13.39
+Generation 512 | Mean fitness (Test): -10.65
+Generation 528 | Mean fitness (Test): -14.29
+Generation 544 | Mean fitness (Test): -56.06
+Generation 560 | Mean fitness (Test): -45.79
+Generation 576 | Mean fitness (Test): -20.37
+srun: Job step aborted: Waiting up to 602 seconds for job step to finish.
+Running ES algorithms:   0%|          | 0/1 [00:00<?, ?it/s][Aslurmstepd: error: *** STEP 7559342.0 ON ee-l40s-01 CANCELLED AT 2025-10-19T20:27:31 ***
+slurmstepd: error: *** JOB 7559342 ON ee-l40s-01 CANCELLED AT 2025-10-19T20:27:31 ***
