@@ -60,7 +60,8 @@ class Experiment:
                 print(
                     f"Generation {(i + 1) * self.LOG_PARIOD:03d}"
                     f" | Mean fitness (Test): {metrics['mean_fitness_in_generation_test'][-1]:.2f}")
-
+        
+        print(jax.__version__)
         # Optionally stack metrics if needed for downstream analysis
         metrics = jax.tree_util.tree_map(lambda *xs: jnp.concatenate(xs, axis=0), *collected_metrics)
 
