@@ -15,18 +15,19 @@ from utils.problem_utils import get_problem_name
 
 
 class Experiment:
-    LOG_PARIOD = 16
     METRIC_KEYS = ['best_fitness', 'best_fitness_in_generation', 'mean_fitness_in_generation',
                    'best_accuracy_in_generation', 'mean_accuracy_in_generation',
                    'mean_fitness_in_generation_test', 'mean_accuracy_in_generation_test',
                    'generation_counter', 'gen_time_sec']
 
-    def __init__(self, problem: Problem, algorithm: EvolutionaryAlgorithm, results_dir_path: str, seed: int):
+    def __init__(self, problem: Problem, algorithm: EvolutionaryAlgorithm, results_dir_path: str, seed: int,
+                 log_period=16):
         self._seed = seed
         self._problem = problem
         self._algorithm = algorithm
         self._results_dir_path = results_dir_path
         self._minimize_fitness = isinstance(problem, GymnaxProblem) or isinstance(problem, BraxProblem)
+        self.log_period = log_period
 
     def run(self, num_generations: int):
         # Split off main RNG key
@@ -42,9 +43,9 @@ class Experiment:
         problem_state = self._problem.init(subkey)
 
         collected_metrics = []
-        for i in range(num_generations // self.LOG_PARIOD):
+        for i in range(num_generations // self.log_period):
             key, subkey = jax.random.split(key)
-            keys = jax.random.split(subkey, self.LOG_PARIOD)
+            keys = jax.random.split(subkey, self.log_period)
             (state, params, problem_state), metrics = jax.lax.scan(
                 self._step,
                 (state, params, problem_state),
@@ -53,12 +54,12 @@ class Experiment:
             collected_metrics.append(metrics)
             if isinstance(self._problem, TorchVisionProblem):
                 print(
-                    f"Generation {(i + 1) * self.LOG_PARIOD:03d}"
+                    f"Generation {(i + 1) * self.log_period:03d}"
                     f" | Mean fitness (Test): {metrics['mean_fitness_in_generation_test'][-1]:.2f}"
                     f" | Mean Accuracy (Test): {metrics['mean_accuracy_in_generation_test'][-1]:.2f}")
             else:
                 print(
-                    f"Generation {(i + 1) * self.LOG_PARIOD:03d}"
+                    f"Generation {(i + 1) * self.log_period:03d}"
                     f" | Mean fitness (Test): {metrics['mean_fitness_in_generation_test'][-1]:.2f}")
 
         # Optionally stack metrics if needed for downstream analysis
