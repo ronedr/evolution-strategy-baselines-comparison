@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Remote Python 3.10.16 (sftp://ronedr@132.72.180.90:22/mnt/new_home/ronedr/.conda/envs/ronedr_es_env/bin/python)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (eliadenv)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="es_research" project-jdk-type="Python SDK" />
 </project>
