@@ -77,7 +77,7 @@ class Experiment:
             try:
                 self._write_gif_best_running_visualization(key, state, problem_state)
             except Exception as e:
-                                print(f"Failed to generate visualization: {e}")
+                print(f"Failed to generate visualization: {e}")
         return metrics
 
     def _write_gif_best_running_visualization(self, key, state, problem_state):
@@ -120,7 +120,7 @@ class Experiment:
 
         # 2. Evaluate the candidates in batches to conserve memory.
         fitness, problem_state, info = self._batched_eval(key_eval, population, problem_state)
-                # In Brax and Gymnax Problems we want to maximize the fitness.
+        # In Brax and Gymnax Problems we want to maximize the fitness.
         fitness = -fitness if self._minimize_fitness else fitness
 
         # 3. Update ES state and collect algorithm-specific metrics
@@ -140,7 +140,7 @@ class Experiment:
                    "gen_time_sec": time.time() - start,
                    "mean_fitness_in_generation": jnp.mean(fitness)}
 
-                # - evaluate the new mean.
+        # - evaluate the new mean.
         test_metrics = self._eval_test(key_eval, state, problem_state)
 
         # - update metrics and drop the irrelevant metrics.
@@ -152,7 +152,6 @@ class Experiment:
         """Evaluate population in batches to fit within memory constraints."""
         num_batches = self.popsize // self.eval_batch_size
         # JAX PyTrees are dictionaries of arrays. Get the keys to iterate over.
-        pytree_keys = list(population.keys())
 
         # Prepare batches of population parameters
         # This creates a PyTree where each leaf is of shape (num_batches, batch_size, ...)
@@ -170,6 +169,7 @@ class Experiment:
             pop_batch = jax.tree.map(lambda x: x[batch_idx], batched_population)
 
             fitness_batch, new_problem_state, info_batch = self._problem.eval(subkey, pop_batch, problem_state)
+            fitness_batch = jnp.nan_to_num(fitness_batch, nan=-1e6, posinf=-1e6, neginf=-1e6)
             return (key, new_problem_state), (fitness_batch, info_batch)
 
         # Use lax.scan to loop over the batches in a JIT-compatible way
