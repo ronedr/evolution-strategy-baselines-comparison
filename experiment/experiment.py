@@ -21,12 +21,14 @@ class Experiment:
                    'generation_counter', 'gen_time_sec']
 
     def __init__(self, problem: Problem, algorithm: EvolutionaryAlgorithm, results_dir_path: str, seed: int,
-                 log_period=16):
+                 log_period=16, eval_batch_size: int = None):
         self._seed = seed
         self._problem = problem
         self._algorithm = algorithm
         self._results_dir_path = results_dir_path
         self._minimize_fitness = isinstance(problem, GymnaxProblem) or isinstance(problem, BraxProblem)
+        self.popsize = self._algorithm.population_size
+        self.eval_batch_size = eval_batch_size if eval_batch_size is not None else self.popsize
         self.log_period = log_period
 
     def run(self, num_generations: int):
@@ -75,7 +77,7 @@ class Experiment:
             try:
                 self._write_gif_best_running_visualization(key, state, problem_state)
             except Exception as e:
-                print(e)
+                                print(f"Failed to generate visualization: {e}")
         return metrics
 
     def _write_gif_best_running_visualization(self, key, state, problem_state):
@@ -116,11 +118,9 @@ class Experiment:
         # 1. Sample candidates = populations
         population, state = self._algorithm.ask(key_ask, state, params)
 
-        # 2. Evaluate the candidates (handles Brax, Gymnax, BBOB, MNIST, etc.)
-        # info using only if the proplem instance of vision problems.
-        fitness, problem_state, info = self._problem.eval(key_eval, population, problem_state)
-
-        # In Brax and Gymnax Problems we want to maximis the fitness.
+        # 2. Evaluate the candidates in batches to conserve memory.
+        fitness, problem_state, info = self._batched_eval(key_eval, population, problem_state)
+                # In Brax and Gymnax Problems we want to maximize the fitness.
         fitness = -fitness if self._minimize_fitness else fitness
 
         # 3. Update ES state and collect algorithm-specific metrics
@@ -140,13 +140,47 @@ class Experiment:
                    "gen_time_sec": time.time() - start,
                    "mean_fitness_in_generation": jnp.mean(fitness)}
 
-        # - evalualte the new mean.
+                # - evaluate the new mean.
         test_metrics = self._eval_test(key_eval, state, problem_state)
 
         # - update metrics and drop the irrelevant metrics.
         metrics = self._update_metrics(metrics, test_metrics)
 
         return (state, params, problem_state), metrics
+
+    def _batched_eval(self, key, population, problem_state):
+        """Evaluate population in batches to fit within memory constraints."""
+        num_batches = self.popsize // self.eval_batch_size
+        # JAX PyTrees are dictionaries of arrays. Get the keys to iterate over.
+        pytree_keys = list(population.keys())
+
+        # Prepare batches of population parameters
+        # This creates a PyTree where each leaf is of shape (num_batches, batch_size, ...)
+        batched_population = jax.tree.map(
+            lambda x: x.reshape((num_batches, self.eval_batch_size) + x.shape[1:]),
+            population
+        )
+
+        def _eval_batch(carry, batch_idx):
+            """Evaluates a single batch of the population."""
+            key, problem_state = carry
+            key, subkey = jax.random.split(key)
+
+            # Select the current batch from the batched population PyTree
+            pop_batch = jax.tree.map(lambda x: x[batch_idx], batched_population)
+
+            fitness_batch, new_problem_state, info_batch = self._problem.eval(subkey, pop_batch, problem_state)
+            return (key, new_problem_state), (fitness_batch, info_batch)
+
+        # Use lax.scan to loop over the batches in a JIT-compatible way
+        (final_key, final_problem_state), (fitness_all, info_all) = jax.lax.scan(
+            _eval_batch, (key, problem_state), jnp.arange(num_batches)
+        )
+
+        # Concatenate the results from all batches
+        fitness = fitness_all.reshape((self.popsize,))
+        info = jax.tree.map(lambda x: x.reshape((self.popsize,) + x.shape[2:]), info_all)
+        return fitness, final_problem_state, info
 
     def _extract_metrics(self, accuracy, fitness, key_eval, key_tell, metrics, params, population, problem_state,
                          state):
