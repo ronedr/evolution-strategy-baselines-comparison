@@ -25,7 +25,7 @@ from evosax.problems import Problem
 
 
 NUM_GENERATIONS = 10
-POPULATION_SIZE = 10
+POPULATION_SIZE = 2
 SEEDS = [0]
 RESULT_DIR = "../../results"
 PROBLEMS_TORCH_VISION = ["MNIST", "FashionMNIST", "CIFAR10", "SVHN"][:1]
