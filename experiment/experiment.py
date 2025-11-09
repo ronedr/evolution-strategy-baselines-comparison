@@ -28,7 +28,7 @@ class Experiment:
         self._results_dir_path = results_dir_path
         self._minimize_fitness = isinstance(problem, GymnaxProblem) or isinstance(problem, BraxProblem)
         self.popsize = self._algorithm.population_size
-        self.eval_batch_size = eval_batch_size if eval_batch_size is not None else self.popsize
+        self.eval_batch_size = eval_batch_size
         self.log_period = log_period
 
     def run(self, num_generations: int):
@@ -63,7 +63,7 @@ class Experiment:
                 print(
                     f"Generation {(i + 1) * self.log_period:03d}"
                     f" | Mean fitness (Test): {metrics['mean_fitness_in_generation_test'][-1]:.2f}")
-        
+
         print(jax.__version__)
         # Optionally stack metrics if needed for downstream analysis
         metrics = jax.tree_util.tree_map(lambda *xs: jnp.concatenate(xs, axis=0), *collected_metrics)
@@ -119,11 +119,17 @@ class Experiment:
         population, state = self._algorithm.ask(key_ask, state, params)
 
         # 2. Evaluate the candidates in batches to conserve memory.
-        fitness, problem_state, info = self._batched_eval(key_eval, population, problem_state)
+        if self.eval_batch_size is None:
+            fitness, problem_state, info = self._problem.eval(key_eval, population, problem_state)
+
+        else:
+            fitness, problem_state, info = self._batched_eval(key_eval, population, problem_state)
+
         # In Brax and Gymnax Problems we want to maximize the fitness.
         fitness = -fitness if self._minimize_fitness else fitness
 
         # 3. Update ES state and collect algorithm-specific metrics
+
         state, metrics = self._algorithm.tell(key_tell, population, fitness, state, params)
 
         # 4. Add custom metrics: mean fitness and runtime
