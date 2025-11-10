@@ -1,0 +1,26 @@
+Wed 22 Oct 2025 22:13:51 IDT
+
+SLURM_JOBID:		 7737276
+SLURM_JOB_NODELIST:	 ise-3090-02 
+
+configuration parmas running: problem_type=vision es_algorithms=Open_ES
+Loading Problems ..:   0%|                                                       | 0/4 [00:00<?, ?it/s]Loading Problems ..:   0%|                                                       | 0/4 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/ronedr/evolution-strategy-baselines-comparison/running_algorithms_main/as_scripts/vision_script.py", line 103, in <module>
+    main()
+  File "/home/ronedr/evolution-strategy-baselines-comparison/running_algorithms_main/as_scripts/vision_script.py", line 95, in main
+    p.start()
+  File "/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/multiprocessing/process.py", line 121, in start
+    self._popen = self._Popen(self)
+  File "/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/multiprocessing/context.py", line 288, in _Popen
+    return Popen(process_obj)
+  File "/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/multiprocessing/popen_spawn_posix.py", line 32, in __init__
+    super().__init__(process_obj)
+  File "/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/multiprocessing/popen_fork.py", line 19, in __init__
+    self._launch(process_obj)
+  File "/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/multiprocessing/popen_spawn_posix.py", line 47, in _launch
+    reduction.dump(process_obj, fp)
+  File "/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/multiprocessing/reduction.py", line 60, in dump
+    ForkingPickler(file, protocol).dump(obj)
+AttributeError: Can't pickle local object 'chain.<locals>.init_fn'
+srun: error: ise-3090-02: task 0: Exited with exit code 1

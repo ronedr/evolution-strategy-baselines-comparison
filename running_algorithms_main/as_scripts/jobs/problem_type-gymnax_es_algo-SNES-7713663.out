@@ -1,0 +1,10 @@
+Wed 22 Oct 2025 00:02:28 IDT
+
+SLURM_JOBID:		 7713663
+SLURM_JOB_NODELIST:	 cs-6000-03 
+
+configuration parmas running: problem_type=gymnax es_algorithms=SNES
+srun: Job step aborted: Waiting up to 602 seconds for job step to finish.
+slurmstepd: error: *** JOB 7713663 ON cs-6000-03 CANCELLED AT 2025-10-22T06:01:55 ***
+slurmstepd: error: *** STEP 7713663.0 ON cs-6000-03 CANCELLED AT 2025-10-22T06:01:56 ***
+srun: error: cs-6000-03: task 0: Terminated

@@ -32,8 +32,7 @@ def get_problem_settings(env_name: str):
     if env_name in list(brax_envs._envs.keys()):
         env = brax_envs._envs[env_name]()
         num_actions = env.action_size
-        output_fn = tanh_output_fn  # continuous control in Brax
-        return num_actions, output_fn
+        return num_actions, tanh_output_fn
     # Gymnax environments
     elif env_name in gymnax.registered_envs:
         env, env_params = gymnax.make(env_name)

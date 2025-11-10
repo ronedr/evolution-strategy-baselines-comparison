@@ -1,0 +1,6 @@
+Mon 10 Nov 2025 07:22:26 IST
+
+SLURM_JOBID:		 8060815
+SLURM_JOB_NODELIST:	 ise-3090-01 
+
+configuration parmas running: problem_type=vision es_algorithms=PGPE
