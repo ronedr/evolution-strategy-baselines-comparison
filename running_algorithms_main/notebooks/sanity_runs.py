@@ -2,6 +2,7 @@ import jax
 import optax
 from evosax.problems import CNN, TorchVisionProblem as Problem, identity_output_fn
 from evosax.algorithms import Open_ES as ES
+from evosax.algorithms import LearnedES
 
 seed = 0
 key = jax.random.key(seed)
