@@ -1,122 +1,105 @@
-import os
-import sys
-
-sys.path.append('../../')
 import jax
 import optax
-from typing import List
+from evosax.problems import CNN, TorchVisionProblem as Problem, identity_output_fn
+from evosax.algorithms import Open_ES as ES
 
-from evosax.problems import CNN, TorchVisionProblem, identity_output_fn
-from evosax.algorithms import algorithms, Open_ES
-from evosax.core.fitness_shaping import standardize_fitness_shaping_fn
+seed = 0
+key = jax.random.key(seed)
 
-from tqdm import tqdm
-from utils.problem_utils import get_problem_settings
-from experiment.experiment import Experiment
-from utils.problem_utils import get_problem_name
-from evosax.problems import Problem
+network = CNN(
+    num_filters=[8, 16],
+    kernel_sizes=[(5, 5), (5, 5)],
+    strides=[(1, 1), (1, 1)],
+    mlp_layer_sizes=[10],
+    output_fn=identity_output_fn,
+)
 
-# from experiment.run_experiments import run_experiment_permutations
+problem = Problem(
+    task_name="MNIST",
+    network=network,
+    batch_size=1024,
+)
 
-# jax.config.update('jax_default_matmul_precision', 'tensorfloat32')
-# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 0 = all logs, 1 = filter INFO, 2 = filter WARNING, 3 = filter ERROR
-# os.environ['XLA_PYTHON_CLIENT_PREALLOCATE'] = 'false'
-# os.environ['XLA_FLAGS'] = '--xla_gpu_strict_conv_algorithm_picker=false --xla_gpu_autotune_level=1'
+key, subkey = jax.random.split(key)
+problem_state = problem.init(key)
+
+key, subkey = jax.random.split(key)
+solution = problem.sample(subkey)
+
+print(f"Number of pararmeters: {sum(leaf.size for leaf in jax.tree.leaves(solution))}")
+
+num_generations = 512
+lr_schedule = optax.exponential_decay(
+    init_value=0.01,
+    transition_steps=num_generations,
+    decay_rate=0.1,
+)
+std_schedule = optax.exponential_decay(
+    init_value=0.05,
+    transition_steps=num_generations,
+    decay_rate=0.2,
+)
+es = ES(
+    population_size=8,
+    solution=solution,
+    optimizer=optax.adam(learning_rate=lr_schedule),
+    std_schedule=std_schedule,
+)
+
+params = es.default_params
 
 
-NUM_GENERATIONS = 10
-POPULATION_SIZE = 2
-SEEDS = [0]
-RESULT_DIR = "../../results"
-PROBLEMS_TORCH_VISION = ["MNIST", "FashionMNIST", "CIFAR10", "SVHN"][:1]
+def step(carry, key):
+    state, params, problem_state = carry
+    key_ask, key_eval, key_tell = jax.random.split(key, 3)
 
-running_es = {
-    #     "PGPE": {
-    #         "optimizer": optax.adam(learning_rate=0.02),
-    #     },
-    #     "ASEBO": {
-    #         "optimizer": optax.adam(learning_rate=0.01),
-    #         "fitness_shaping_fn": standardize_fitness_shaping_fn
-    #     },
-    #     "LES": {
-    #         "optimizer": optax.adam(learning_rate=0.01)
-    #     },
-    #     "Open_ES": {
-    #         "optimizer": optax.adam(learning_rate=0.05)
-    #     },
+    population, state = es.ask(key_ask, state, params)
 
-    # "SNES": {},
-    # "Sep_CMA_ES": {},
-    "CMA_ES": {},
-    # "LES": {},
-    # "DES": {},
-    # "EvoTF_ES": {},
+    fitness, problem_state, _ = problem.eval(key_eval, population, problem_state)
+
+    state, metrics = es.tell(
+        key_tell, population, fitness, state, params
+    )  # Minimize fitness
+
+    return (state, params, problem_state), metrics
+
+
+key, subkey = jax.random.split(key)
+state = es.init(subkey, solution, params)
+
+fitness_log_dict = {
+    'generation': [],
+    'max_fitness': [],
+    'min_fitness': [],
+    'mean_fitness': [],
+    'mean_accuracy': []
 }
 
+log_period = 1
+for i in range(num_generations // log_period):
+    key, subkey = jax.random.split(key)
+    keys = jax.random.split(subkey, log_period)
+    (state, params, problem_state), metrics = jax.lax.scan(
+        step,
+        (state, params, problem_state),
+        keys,
+    )
 
-def run_experiment_permutations(
-        problems: List[Problem],
-        op_name_to_params_mapping: dict,
-        num_generations: int,
-        population_size: int,
-        result_dir: str,
-        run_again_if_exist: bool = False,
-        seeds: list[int] = None,
-):
-    if seeds is None:
-        seeds = list(range(5))
+    mean = es.get_mean(state)
 
-    for problem in problems:
-        for es_name in tqdm(op_name_to_params_mapping, desc="Running ES algorithms"):
-            for seed in seeds:
-                try:
-                    # Create a master key for the current seed
-                    key = jax.random.key(seed)
-                    # Split a subkey for initializing the algorithm's solution
-                    key, subkey_init = jax.random.split(key)
-                    es_algorithm = algorithms[es_name](
-                        population_size=population_size,
-                        solution=problem.sample(subkey_init),
-                        **op_name_to_params_mapping[es_name],
-                    )
-                    experiment = Experiment(
-                        problem=problem,
-                        algorithm=es_algorithm,
-                        results_dir_path=result_dir,
-                        seed=seed,
-                        log_period=2,
-                        eval_batch_size=2
-                    )
+    key, subkey = jax.random.split(key)
+    fitness, problem_state, info = problem.eval_test(
+        key, jax.tree.map(lambda x: x[None], mean), problem_state
+    )
 
-                    if run_again_if_exist or not experiment.has_run():
-                        print(f"Running experiment: {experiment.get_experiment_path_file()}")
-                        experiment.run(num_generations)
-                    else:
-                        print(f"Experiment results already exist: {experiment.get_experiment_path_file()}")
-                except Exception as e:
-                    print(
-                        f"Failed to run experiment for {es_name} on {get_problem_name(problem)} with seed {seed}. Error: {e}")
+    fitness_log_dict['generation'] += [(i + 1) * log_period]
 
+    fitness_log_dict['max_fitness'] += [fitness.max()]
+    fitness_log_dict['min_fitness'] += [fitness.min()]
+    fitness_log_dict['mean_fitness'] += [fitness.mean()]
 
-for task_name in tqdm(PROBLEMS_TORCH_VISION, desc="Loading Problems .."):
-    try:
-        current_task = TorchVisionProblem(task_name=task_name,
-                                          network=CNN(
-                                              num_filters=[4],
-                                              kernel_sizes=[(5, 5)],
-                                              strides=[(1, 1)],
-                                              mlp_layer_sizes=[5],
-                                              output_fn=identity_output_fn,
-                                          ),
-                                          batch_size=8)
-        print("Successfully loaded:", task_name)
-        run_experiment_permutations(problems=[current_task],
-                                    op_name_to_params_mapping=running_es,
-                                    num_generations=NUM_GENERATIONS,
-                                    population_size=POPULATION_SIZE,
-                                    result_dir=RESULT_DIR,
-                                    run_again_if_exist=True,
-                                    seeds=SEEDS)
-    except Exception as e:
-        print("Failed to load: " + task_name, '\nREASON:', e)
-        raise e
+    fitness_log_dict['mean_accuracy'] += [info['accuracy'].mean()]
+
+    print(
+        f"Generation {(i + 1) * log_period:03d} | Mean fitness: {fitness.mean():.2f} | Accuracy: {info['accuracy'].mean():.2f}"
+    )
