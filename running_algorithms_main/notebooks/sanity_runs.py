@@ -7,7 +7,7 @@ import optax
 from typing import List
 
 from evosax.problems import CNN, TorchVisionProblem, identity_output_fn
-from evosax.algorithms import algorithms
+from evosax.algorithms import algorithms, Open_ES
 from evosax.core.fitness_shaping import standardize_fitness_shaping_fn
 
 from tqdm import tqdm
