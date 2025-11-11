@@ -1,18 +1,14 @@
 import sys
+
 sys.path.append('/home/ronedr/evolution-strategy-baselines-comparison')
 
-
-import gc
-import multiprocessing as mp
 import optax
-import jax
 from tqdm import tqdm
 import brax.envs as brax_envs
 from evosax.problems import BraxProblem as Problem
 from evosax.problems.networks import MLP
-from utils.problem_utils import get_problem_settings
+from experiment.utils.problem_utils import get_problem_settings
 from experiment.run_experiments import run_experiment_permutations
-from evosax.core.fitness_shaping import standardize_fitness_shaping_fn
 
 # running params
 num_generations = 1000
@@ -35,12 +31,12 @@ es_dict = {
 
 ## Extract the es_algorithms that we want to run in this job.
 import argparse
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--es_algorithms', required=True,
                     help="Comma-separated list, e.g. 'PGPE,Open_ES,ASEBO'")
 args = parser.parse_args()
 es_algorithms = args.es_algorithms.split(",")
-
 
 # take only the es_algorithms we insert as arg.
 running_es = {es: es_dict[es] for es in es_algorithms if es in es_dict}

@@ -1,18 +1,14 @@
 import sys
+
 sys.path.append('/home/ronedr/evolution-strategy-baselines-comparison')
 
 # === imports (parent) ===
-import jax
-import gc
-import multiprocessing as mp
 import optax
 from tqdm import tqdm
-import gymnax
 from evosax.problems import GymnaxProblem as Problem
-from utils.nn_model import CNN
-from utils.problem_utils import get_problem_settings
+from experiment.utils.nn_model import CNN
+from experiment.utils.problem_utils import get_problem_settings
 from experiment.run_experiments import run_experiment_permutations
-from evosax.core.fitness_shaping import standardize_fitness_shaping_fn
 
 # running params
 num_generations = 5000
@@ -36,9 +32,9 @@ es_dict = {
     "DES": {},
 }
 
-
 # === args ===
 import argparse
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--es_algorithms', required=True,
                     help="List of es_algorithms to run, e.g. 'PGPE,Open_ES,ASEBO'")

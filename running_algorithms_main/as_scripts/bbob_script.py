@@ -1,14 +1,10 @@
 import sys
 sys.path.append('/home/ronedr/evolution-strategy-baselines-comparison')
 
-## imports.
-import jax
 import optax
 from tqdm import tqdm
 from evosax.problems import BBOBProblem as Problem, bbob_fns
-from utils.problem_utils import get_problem_settings
 from experiment.run_experiments import run_experiment_permutations
-from evosax.core.fitness_shaping import standardize_fitness_shaping_fn
 
 num_generations = 1024
 population_size = 256
@@ -24,7 +20,7 @@ es_dict = {
     "PGPE": {
         "optimizer": optax.adam(learning_rate=0.02),
     },
-    "Open_ES": {    
+    "Open_ES": {
         "optimizer": optax.adam(learning_rate=0.05)
     },
     "SNES": {},

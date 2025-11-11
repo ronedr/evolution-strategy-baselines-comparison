@@ -1,6 +1,7 @@
 import time
 from dataclasses import replace, fields
-from typing import Tuple, Dict, Any
+from typing import Tuple, Dict, Any, Optional
+from functools import partial
 
 import jax
 import jax.numpy as jnp
@@ -10,6 +11,36 @@ from evosax.problems.rl.brax import BraxProblem
 from evosax.problems.rl.gymnax import GymnaxProblem
 
 from experiment.metrics_service import MetricsService
+
+def step(algorithm: EvolutionaryAlgorithm,
+             problem: Problem,
+             minimize_fitness: bool,
+             carry,
+             key):
+    state, params, problem_state = carry
+    k1, k2, k3 = jax.random.split(key, 3)
+
+    population, state = algorithm.ask(k1, state, params)
+    fitness, problem_state, info = problem.eval(k2, population, problem_state)
+
+    fitness = -fitness if minimize_fitness else fitness
+    state, metrics = algorithm.tell(k3, population, fitness, state, params)
+
+    # Return a tiny scalar to keep scan outputs small (or return None)
+    return (state, params, problem_state), metrics
+
+
+@partial(
+    jax.jit,
+    static_argnames=("algorithm", "problem", "minimize_fitness"),
+    donate_argnums=(3,),  # donate ONLY the carry (positional index 3)
+)
+def scan_step(algorithm, problem, minimize_fitness, carry, keys):
+    def body_fn(c, k):
+        # c is the carry, do not assign to outer `carry` here!
+        return step(algorithm, problem, minimize_fitness, c, k)
+    return jax.lax.scan(body_fn, carry, keys)
+
 
 
 class Experiment:
@@ -39,7 +70,8 @@ class Experiment:
             minimize_fitness=self._minimize_fitness,
         )
 
-    def update_params(self, dc, updates: dict):
+    @staticmethod
+    def update_params(dc, updates: dict):
         names = {f.name for f in fields(dc)}
         safe = {k: v for k, v in updates.items() if k in names}
         if not safe:
@@ -60,18 +92,28 @@ class Experiment:
         problem_state = self._problem.init(subkey)
 
         collected = []
-
+        carry = (state, params, problem_state)
         for start in range(0, num_generations, self.log_period):
             chunk = min(self.log_period, num_generations - start)
             key, subkey = jax.random.split(key)
             keys = jax.random.split(subkey, chunk)
-            (state, params, problem_state), period_gens_metrics = jax.lax.scan(
-                self._step,
-                (state, params, problem_state),
-                keys,
+            
+            (state, params, problem_state), metrics = _run_chunk(
+                self._algorithm, self._problem, self._minimize_fitness, carry, keys
             )
-            self.metrics.print_status(chunk + start, period_gens_metrics)
-            collected.append(period_gens_metrics)
+            carry = (state, params, problem_state)
+            
+            mean = self._algorithm.get_mean(state)
+            key, subkey = jax.random.split(key)
+            fitness, problem_state, info = self._problem.eval_test(
+                key, jax.tree.map(lambda x: x[None], mean), problem_state
+            )
+            print(
+                f"Generation {chunk + start:03d} | Mean fitness: {fitness.mean():.2f} | Accuracy: {info['accuracy'].mean():.2f}"
+            )
+
+            # self.metrics.print_status(chunk + start, metrics)
+            collected.append(metrics)
 
         metrics = jax.tree_util.tree_map(lambda *xs: jnp.concatenate(xs, axis=0), *collected)
         metrics = self.metrics.add_cumulative_time(metrics)
@@ -113,31 +155,31 @@ class Experiment:
             test_metrics=test_metrics,
         )
 
-        return (state, params, problem_state), out_metrics
+        return (state, params, problem_state), algo_metrics
 
-    def _batched_eval(self, key, population, problem_state) -> Tuple[jnp.ndarray, Any, Dict[str, Any]]:
-        num_batches = self.popsize // self.eval_batch_size
+    # def _batched_eval(self, key, population, problem_state) -> Tuple[jnp.ndarray, Any, Dict[str, Any]]:
+    #     num_batches = self.popsize // self.eval_batch_size
 
-        batched_population = jax.tree.map(
-            lambda x: x.reshape((num_batches, self.eval_batch_size) + x.shape[1:]),
-            population,
-        )
+    #     batched_population = jax.tree.map(
+    #         lambda x: x.reshape((num_batches, self.eval_batch_size) + x.shape[1:]),
+    #         population,
+    #     )
 
-        def _eval_batch(carry, batch_idx):
-            k, ps = carry
-            k, subkey = jax.random.split(k)
-            pop_batch = jax.tree.map(lambda x: x[batch_idx], batched_population)
-            fitness_batch, new_ps, info_batch = self._problem.eval(subkey, pop_batch, ps)
-            fitness_batch = jnp.nan_to_num(fitness_batch, nan=-1e6, posinf=-1e6, neginf=-1e6)
-            return (k, new_ps), (fitness_batch, info_batch)
+    #     def _eval_batch(carry, batch_idx):
+    #         k, ps = carry
+    #         k, subkey = jax.random.split(k)
+    #         pop_batch = jax.tree.map(lambda x: x[batch_idx], batched_population)
+    #         fitness_batch, new_ps, info_batch = self._problem.eval(subkey, pop_batch, ps)
+    #         fitness_batch = jnp.nan_to_num(fitness_batch, nan=-1e6, posinf=-1e6, neginf=-1e6)
+    #         return (k, new_ps), (fitness_batch, info_batch)
 
-        (_, final_ps), (fitness_all, info_all) = jax.lax.scan(
-            _eval_batch, (key, problem_state), jnp.arange(num_batches)
-        )
+    #     (_, final_ps), (fitness_all, info_all) = jax.lax.scan(
+    #         _eval_batch, (key, problem_state), jnp.arange(num_batches)
+    #     )
 
-        fitness = fitness_all.reshape((self.popsize,))
-        info = jax.tree.map(lambda x: x.reshape((self.popsize,) + x.shape[2:]), info_all)
-        return fitness, final_ps, info
+    #     fitness = fitness_all.reshape((self.popsize,))
+    #     info = jax.tree.map(lambda x: x.reshape((self.popsize,) + x.shape[2:]), info_all)
+    #     return fitness, final_ps, info
 
     def _eval_test(self, key, state, problem_state) -> Dict[str, Any]:
         mean_solution = self._algorithm.get_mean(state)

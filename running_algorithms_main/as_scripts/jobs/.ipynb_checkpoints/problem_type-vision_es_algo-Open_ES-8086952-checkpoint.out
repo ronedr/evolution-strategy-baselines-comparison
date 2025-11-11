@@ -1,0 +1,6 @@
+Tue 11 Nov 2025 00:15:08 IST
+
+SLURM_JOBID:		 8086952
+SLURM_JOB_NODELIST:	 ise-pheno-01 
+
+configuration parmas running: problem_type=vision es_algorithms=Open_ES

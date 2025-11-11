@@ -1,0 +1,6 @@
+Mon 10 Nov 2025 22:08:36 IST
+
+SLURM_JOBID:		 8086770
+SLURM_JOB_NODELIST:	 cs-3090-01 
+
+configuration parmas running: problem_type=vision es_algorithms=dsa

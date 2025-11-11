@@ -1,5 +1,0 @@
-# 'best_fitness'
-# 'gen_time_sec'
-# 'best_fitness_in_generation'
-# 'mean_fitness_in_generation'
-# 'generation_counter'

@@ -6,7 +6,8 @@ from evosax.problems import Problem
 from tqdm import tqdm
 
 from experiment.experiment import Experiment
-from utils.problem_utils import get_problem_name
+from experiment.utils.merics_utils import custom_metrics_fn
+from experiment.utils.problem_utils import get_problem_name
 
 
 def run_experiment_permutations(problems: List[Problem], es_dict: dict, num_generations: int, population_size: int,
@@ -19,12 +20,13 @@ def run_experiment_permutations(problems: List[Problem], es_dict: dict, num_gene
         for es_name in tqdm(es_dict, desc="Running ES algorithms"):
             try:
                 for seed in seeds:
-                    key = jax.random.PRNGKey(seed)  # was jax.random.key(...)
+                    key = jax.random.PRNGKey(seed)
                     key, subkey = jax.random.split(key)
                     solution = problem.sample(subkey)
 
                     es_algorithm = algorithms[es_name](
                         population_size=population_size,
+                        metrics_fn=custom_metrics_fn,
                         solution=solution,
                         **es_dict[es_name],
                     )

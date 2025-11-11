@@ -20,11 +20,13 @@ lr_schedule = optax.exponential_decay(
     transition_steps=num_generations,
     decay_rate=0.1,
 )
+
 std_schedule = optax.exponential_decay(
     init_value=0.05,
     transition_steps=num_generations,
     decay_rate=0.2,
 )
+
 es_dict = {
     "Sep_CMA_ES": {},
     "Open_ES": {    
