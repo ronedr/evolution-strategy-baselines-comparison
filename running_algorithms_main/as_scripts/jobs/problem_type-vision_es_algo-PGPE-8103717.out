@@ -4,3 +4,290 @@ SLURM_JOBID:		 8103717
 SLURM_JOB_NODELIST:	 ise-3090-03 
 
 configuration parmas running: problem_type=vision es_algorithms=PGPE
+Successfully loaded: MNIST
+Loading Problems ..:   0%|                                                                                                                                    | 0/4 [00:00<?, ?it/s]
+running the experiment ... [../../results/TorchVisionProblem/MNIST/PGPE/0]
+Running ES algorithms:   0%|                                                                                                                                  | 0/1 [00:00<?, ?it/s][A2025-11-11 11:23:14.459494: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.14GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2025-11-11 11:23:14.459590: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.14GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2025-11-11 11:23:14.459654: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.14GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2025-11-11 11:23:14.459734: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.15GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2025-11-11 11:23:14.588346: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.15GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2025-11-11 11:23:14.588435: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.15GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2025-11-11 11:23:14.588521: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.15GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2025-11-11 11:23:14.588604: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.15GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2025-11-11 11:23:14.588679: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.15GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+2025-11-11 11:23:14.588758: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 6.15GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+Generation 005 | Best fitness (Train): 7.23 | Best fitness in generation (Train): 7.23 | Mean fitness (Train): 10.14 | Mean fitness (Test): 2.70
+ | Mean Accuracy (Test): 0.31
+Generation 010 | Best fitness (Train): 6.08 | Best fitness in generation (Train): 6.08 | Mean fitness (Train): 8.85 | Mean fitness (Test): 2.72
+ | Mean Accuracy (Test): 0.32
+Generation 015 | Best fitness (Train): 5.28 | Best fitness in generation (Train): 5.28 | Mean fitness (Train): 7.69 | Mean fitness (Test): 2.81
+ | Mean Accuracy (Test): 0.36
+Generation 020 | Best fitness (Train): 5.08 | Best fitness in generation (Train): 5.08 | Mean fitness (Train): 7.03 | Mean fitness (Test): 2.58
+ | Mean Accuracy (Test): 0.41
+Generation 025 | Best fitness (Train): 4.72 | Best fitness in generation (Train): 4.72 | Mean fitness (Train): 6.42 | Mean fitness (Test): 2.43
+ | Mean Accuracy (Test): 0.43
+Generation 030 | Best fitness (Train): 4.08 | Best fitness in generation (Train): 4.79 | Mean fitness (Train): 6.14 | Mean fitness (Test): 2.05
+ | Mean Accuracy (Test): 0.52
+Generation 035 | Best fitness (Train): 3.74 | Best fitness in generation (Train): 3.74 | Mean fitness (Train): 5.37 | Mean fitness (Test): 2.06
+ | Mean Accuracy (Test): 0.53
+Generation 040 | Best fitness (Train): 3.28 | Best fitness in generation (Train): 3.57 | Mean fitness (Train): 4.97 | Mean fitness (Test): 1.89
+ | Mean Accuracy (Test): 0.55
+Generation 045 | Best fitness (Train): 2.91 | Best fitness in generation (Train): 3.33 | Mean fitness (Train): 4.40 | Mean fitness (Test): 1.63
+ | Mean Accuracy (Test): 0.60
+Generation 050 | Best fitness (Train): 2.88 | Best fitness in generation (Train): 2.88 | Mean fitness (Train): 4.04 | Mean fitness (Test): 1.56
+ | Mean Accuracy (Test): 0.60
+Generation 055 | Best fitness (Train): 2.59 | Best fitness in generation (Train): 2.75 | Mean fitness (Train): 3.90 | Mean fitness (Test): 1.42
+ | Mean Accuracy (Test): 0.62
+Generation 060 | Best fitness (Train): 2.40 | Best fitness in generation (Train): 2.70 | Mean fitness (Train): 3.52 | Mean fitness (Test): 1.37
+ | Mean Accuracy (Test): 0.63
+Generation 065 | Best fitness (Train): 2.25 | Best fitness in generation (Train): 2.39 | Mean fitness (Train): 3.29 | Mean fitness (Test): 1.38
+ | Mean Accuracy (Test): 0.61
+Generation 070 | Best fitness (Train): 2.25 | Best fitness in generation (Train): 2.33 | Mean fitness (Train): 3.01 | Mean fitness (Test): 1.41
+ | Mean Accuracy (Test): 0.62
+Generation 075 | Best fitness (Train): 2.05 | Best fitness in generation (Train): 2.23 | Mean fitness (Train): 2.93 | Mean fitness (Test): 1.25
+ | Mean Accuracy (Test): 0.65
+Generation 080 | Best fitness (Train): 1.96 | Best fitness in generation (Train): 2.07 | Mean fitness (Train): 2.63 | Mean fitness (Test): 1.15
+ | Mean Accuracy (Test): 0.68
+Generation 085 | Best fitness (Train): 1.70 | Best fitness in generation (Train): 1.74 | Mean fitness (Train): 2.58 | Mean fitness (Test): 1.12
+ | Mean Accuracy (Test): 0.67
+Generation 090 | Best fitness (Train): 1.60 | Best fitness in generation (Train): 1.67 | Mean fitness (Train): 2.27 | Mean fitness (Test): 1.08
+ | Mean Accuracy (Test): 0.70
+Generation 095 | Best fitness (Train): 1.58 | Best fitness in generation (Train): 1.74 | Mean fitness (Train): 2.25 | Mean fitness (Test): 1.15
+ | Mean Accuracy (Test): 0.68
+Generation 100 | Best fitness (Train): 1.51 | Best fitness in generation (Train): 1.61 | Mean fitness (Train): 2.18 | Mean fitness (Test): 1.04
+ | Mean Accuracy (Test): 0.71
+Generation 105 | Best fitness (Train): 1.49 | Best fitness in generation (Train): 1.49 | Mean fitness (Train): 1.99 | Mean fitness (Test): 1.08
+ | Mean Accuracy (Test): 0.67
+Generation 110 | Best fitness (Train): 1.48 | Best fitness in generation (Train): 1.54 | Mean fitness (Train): 1.98 | Mean fitness (Test): 1.04
+ | Mean Accuracy (Test): 0.68
+Generation 115 | Best fitness (Train): 1.35 | Best fitness in generation (Train): 1.46 | Mean fitness (Train): 1.96 | Mean fitness (Test): 1.00
+ | Mean Accuracy (Test): 0.68
+Generation 120 | Best fitness (Train): 1.24 | Best fitness in generation (Train): 1.26 | Mean fitness (Train): 1.84 | Mean fitness (Test): 0.92
+ | Mean Accuracy (Test): 0.71
+Generation 125 | Best fitness (Train): 1.24 | Best fitness in generation (Train): 1.33 | Mean fitness (Train): 1.81 | Mean fitness (Test): 0.86
+ | Mean Accuracy (Test): 0.72
+Generation 130 | Best fitness (Train): 1.13 | Best fitness in generation (Train): 1.32 | Mean fitness (Train): 1.73 | Mean fitness (Test): 0.83
+ | Mean Accuracy (Test): 0.75
+Generation 135 | Best fitness (Train): 1.08 | Best fitness in generation (Train): 1.08 | Mean fitness (Train): 1.50 | Mean fitness (Test): 0.77
+ | Mean Accuracy (Test): 0.76
+Generation 140 | Best fitness (Train): 1.07 | Best fitness in generation (Train): 1.07 | Mean fitness (Train): 1.47 | Mean fitness (Test): 0.81
+ | Mean Accuracy (Test): 0.75
+Generation 145 | Best fitness (Train): 1.00 | Best fitness in generation (Train): 1.09 | Mean fitness (Train): 1.51 | Mean fitness (Test): 0.78
+ | Mean Accuracy (Test): 0.77
+Generation 150 | Best fitness (Train): 1.00 | Best fitness in generation (Train): 1.00 | Mean fitness (Train): 1.41 | Mean fitness (Test): 0.68
+ | Mean Accuracy (Test): 0.78
+Generation 155 | Best fitness (Train): 0.97 | Best fitness in generation (Train): 1.09 | Mean fitness (Train): 1.42 | Mean fitness (Test): 0.74
+ | Mean Accuracy (Test): 0.77
+Generation 160 | Best fitness (Train): 0.89 | Best fitness in generation (Train): 1.10 | Mean fitness (Train): 1.47 | Mean fitness (Test): 0.71
+ | Mean Accuracy (Test): 0.78
+Generation 165 | Best fitness (Train): 0.89 | Best fitness in generation (Train): 0.93 | Mean fitness (Train): 1.26 | Mean fitness (Test): 0.66
+ | Mean Accuracy (Test): 0.78
+Generation 170 | Best fitness (Train): 0.87 | Best fitness in generation (Train): 0.87 | Mean fitness (Train): 1.23 | Mean fitness (Test): 0.67
+ | Mean Accuracy (Test): 0.81
+Generation 175 | Best fitness (Train): 0.86 | Best fitness in generation (Train): 0.86 | Mean fitness (Train): 1.22 | Mean fitness (Test): 0.68
+ | Mean Accuracy (Test): 0.78
+Generation 180 | Best fitness (Train): 0.82 | Best fitness in generation (Train): 0.82 | Mean fitness (Train): 1.14 | Mean fitness (Test): 0.60
+ | Mean Accuracy (Test): 0.80
+Generation 185 | Best fitness (Train): 0.82 | Best fitness in generation (Train): 0.94 | Mean fitness (Train): 1.22 | Mean fitness (Test): 0.64
+ | Mean Accuracy (Test): 0.79
+Generation 190 | Best fitness (Train): 0.77 | Best fitness in generation (Train): 0.77 | Mean fitness (Train): 1.08 | Mean fitness (Test): 0.64
+ | Mean Accuracy (Test): 0.80
+Generation 195 | Best fitness (Train): 0.74 | Best fitness in generation (Train): 0.80 | Mean fitness (Train): 1.16 | Mean fitness (Test): 0.58
+ | Mean Accuracy (Test): 0.82
+Generation 200 | Best fitness (Train): 0.74 | Best fitness in generation (Train): 0.77 | Mean fitness (Train): 1.07 | Mean fitness (Test): 0.63
+ | Mean Accuracy (Test): 0.81
+Generation 205 | Best fitness (Train): 0.67 | Best fitness in generation (Train): 0.76 | Mean fitness (Train): 1.13 | Mean fitness (Test): 0.59
+ | Mean Accuracy (Test): 0.83
+Generation 210 | Best fitness (Train): 0.67 | Best fitness in generation (Train): 0.71 | Mean fitness (Train): 1.00 | Mean fitness (Test): 0.49
+ | Mean Accuracy (Test): 0.84
+Generation 215 | Best fitness (Train): 0.67 | Best fitness in generation (Train): 0.73 | Mean fitness (Train): 0.99 | Mean fitness (Test): 0.57
+ | Mean Accuracy (Test): 0.83
+Generation 220 | Best fitness (Train): 0.66 | Best fitness in generation (Train): 0.69 | Mean fitness (Train): 0.99 | Mean fitness (Test): 0.52
+ | Mean Accuracy (Test): 0.83
+Generation 225 | Best fitness (Train): 0.66 | Best fitness in generation (Train): 0.72 | Mean fitness (Train): 1.00 | Mean fitness (Test): 0.53
+ | Mean Accuracy (Test): 0.85
+Generation 230 | Best fitness (Train): 0.66 | Best fitness in generation (Train): 0.75 | Mean fitness (Train): 0.99 | Mean fitness (Test): 0.46
+ | Mean Accuracy (Test): 0.85
+Generation 235 | Best fitness (Train): 0.66 | Best fitness in generation (Train): 0.67 | Mean fitness (Train): 0.88 | Mean fitness (Test): 0.45
+ | Mean Accuracy (Test): 0.85
+Generation 240 | Best fitness (Train): 0.61 | Best fitness in generation (Train): 0.64 | Mean fitness (Train): 0.89 | Mean fitness (Test): 0.45
+ | Mean Accuracy (Test): 0.85
+Generation 245 | Best fitness (Train): 0.61 | Best fitness in generation (Train): 0.75 | Mean fitness (Train): 1.02 | Mean fitness (Test): 0.52
+ | Mean Accuracy (Test): 0.85
+Generation 250 | Best fitness (Train): 0.58 | Best fitness in generation (Train): 0.58 | Mean fitness (Train): 0.83 | Mean fitness (Test): 0.50
+ | Mean Accuracy (Test): 0.86
+Generation 255 | Best fitness (Train): 0.58 | Best fitness in generation (Train): 0.58 | Mean fitness (Train): 0.84 | Mean fitness (Test): 0.57
+ | Mean Accuracy (Test): 0.85
+Generation 260 | Best fitness (Train): 0.58 | Best fitness in generation (Train): 0.58 | Mean fitness (Train): 0.80 | Mean fitness (Test): 0.48
+ | Mean Accuracy (Test): 0.85
+Generation 265 | Best fitness (Train): 0.57 | Best fitness in generation (Train): 0.57 | Mean fitness (Train): 0.81 | Mean fitness (Test): 0.40
+ | Mean Accuracy (Test): 0.87
+Generation 270 | Best fitness (Train): 0.57 | Best fitness in generation (Train): 0.70 | Mean fitness (Train): 0.86 | Mean fitness (Test): 0.46
+ | Mean Accuracy (Test): 0.87
+Generation 275 | Best fitness (Train): 0.54 | Best fitness in generation (Train): 0.63 | Mean fitness (Train): 0.83 | Mean fitness (Test): 0.46
+ | Mean Accuracy (Test): 0.86
+Generation 280 | Best fitness (Train): 0.54 | Best fitness in generation (Train): 0.60 | Mean fitness (Train): 0.78 | Mean fitness (Test): 0.45
+ | Mean Accuracy (Test): 0.87
+Generation 285 | Best fitness (Train): 0.53 | Best fitness in generation (Train): 0.59 | Mean fitness (Train): 0.77 | Mean fitness (Test): 0.55
+ | Mean Accuracy (Test): 0.86
+Generation 290 | Best fitness (Train): 0.50 | Best fitness in generation (Train): 0.59 | Mean fitness (Train): 0.80 | Mean fitness (Test): 0.50
+ | Mean Accuracy (Test): 0.86
+Generation 295 | Best fitness (Train): 0.50 | Best fitness in generation (Train): 0.55 | Mean fitness (Train): 0.70 | Mean fitness (Test): 0.47
+ | Mean Accuracy (Test): 0.87
+Generation 300 | Best fitness (Train): 0.50 | Best fitness in generation (Train): 0.58 | Mean fitness (Train): 0.74 | Mean fitness (Test): 0.46
+ | Mean Accuracy (Test): 0.87
+Generation 305 | Best fitness (Train): 0.50 | Best fitness in generation (Train): 0.64 | Mean fitness (Train): 0.84 | Mean fitness (Test): 0.48
+ | Mean Accuracy (Test): 0.87
+Generation 310 | Best fitness (Train): 0.50 | Best fitness in generation (Train): 0.59 | Mean fitness (Train): 0.80 | Mean fitness (Test): 0.46
+ | Mean Accuracy (Test): 0.87
+Generation 315 | Best fitness (Train): 0.50 | Best fitness in generation (Train): 0.61 | Mean fitness (Train): 0.76 | Mean fitness (Test): 0.46
+ | Mean Accuracy (Test): 0.87
+Generation 320 | Best fitness (Train): 0.50 | Best fitness in generation (Train): 0.62 | Mean fitness (Train): 0.81 | Mean fitness (Test): 0.46
+ | Mean Accuracy (Test): 0.87
+Generation 325 | Best fitness (Train): 0.50 | Best fitness in generation (Train): 0.62 | Mean fitness (Train): 0.77 | Mean fitness (Test): 0.45
+ | Mean Accuracy (Test): 0.87
+Generation 330 | Best fitness (Train): 0.50 | Best fitness in generation (Train): 0.61 | Mean fitness (Train): 0.76 | Mean fitness (Test): 0.42
+ | Mean Accuracy (Test): 0.87
+Generation 335 | Best fitness (Train): 0.48 | Best fitness in generation (Train): 0.60 | Mean fitness (Train): 0.78 | Mean fitness (Test): 0.44
+ | Mean Accuracy (Test): 0.86
+Generation 340 | Best fitness (Train): 0.48 | Best fitness in generation (Train): 0.54 | Mean fitness (Train): 0.72 | Mean fitness (Test): 0.43
+ | Mean Accuracy (Test): 0.87
+Generation 345 | Best fitness (Train): 0.48 | Best fitness in generation (Train): 0.54 | Mean fitness (Train): 0.69 | Mean fitness (Test): 0.47
+ | Mean Accuracy (Test): 0.86
+Generation 350 | Best fitness (Train): 0.48 | Best fitness in generation (Train): 0.54 | Mean fitness (Train): 0.70 | Mean fitness (Test): 0.40
+ | Mean Accuracy (Test): 0.88
+Generation 355 | Best fitness (Train): 0.48 | Best fitness in generation (Train): 0.51 | Mean fitness (Train): 0.67 | Mean fitness (Test): 0.42
+ | Mean Accuracy (Test): 0.88
+Generation 360 | Best fitness (Train): 0.48 | Best fitness in generation (Train): 0.57 | Mean fitness (Train): 0.70 | Mean fitness (Test): 0.47
+ | Mean Accuracy (Test): 0.88
+Generation 365 | Best fitness (Train): 0.48 | Best fitness in generation (Train): 0.51 | Mean fitness (Train): 0.68 | Mean fitness (Test): 0.39
+ | Mean Accuracy (Test): 0.88
+Generation 370 | Best fitness (Train): 0.48 | Best fitness in generation (Train): 0.51 | Mean fitness (Train): 0.67 | Mean fitness (Test): 0.43
+ | Mean Accuracy (Test): 0.88
+Generation 375 | Best fitness (Train): 0.46 | Best fitness in generation (Train): 0.50 | Mean fitness (Train): 0.66 | Mean fitness (Test): 0.42
+ | Mean Accuracy (Test): 0.88
+Generation 380 | Best fitness (Train): 0.46 | Best fitness in generation (Train): 0.46 | Mean fitness (Train): 0.59 | Mean fitness (Test): 0.47
+ | Mean Accuracy (Test): 0.88
+Generation 385 | Best fitness (Train): 0.46 | Best fitness in generation (Train): 0.46 | Mean fitness (Train): 0.60 | Mean fitness (Test): 0.43
+ | Mean Accuracy (Test): 0.87
+Generation 390 | Best fitness (Train): 0.46 | Best fitness in generation (Train): 0.48 | Mean fitness (Train): 0.62 | Mean fitness (Test): 0.39
+ | Mean Accuracy (Test): 0.88
+Generation 395 | Best fitness (Train): 0.46 | Best fitness in generation (Train): 0.52 | Mean fitness (Train): 0.69 | Mean fitness (Test): 0.39
+ | Mean Accuracy (Test): 0.88
+Generation 400 | Best fitness (Train): 0.45 | Best fitness in generation (Train): 0.47 | Mean fitness (Train): 0.62 | Mean fitness (Test): 0.31
+ | Mean Accuracy (Test): 0.90
+Generation 405 | Best fitness (Train): 0.43 | Best fitness in generation (Train): 0.49 | Mean fitness (Train): 0.64 | Mean fitness (Test): 0.36
+ | Mean Accuracy (Test): 0.89
+Generation 410 | Best fitness (Train): 0.43 | Best fitness in generation (Train): 0.45 | Mean fitness (Train): 0.62 | Mean fitness (Test): 0.42
+ | Mean Accuracy (Test): 0.88
+Generation 415 | Best fitness (Train): 0.43 | Best fitness in generation (Train): 0.45 | Mean fitness (Train): 0.58 | Mean fitness (Test): 0.43
+ | Mean Accuracy (Test): 0.88
+Generation 420 | Best fitness (Train): 0.43 | Best fitness in generation (Train): 0.55 | Mean fitness (Train): 0.72 | Mean fitness (Test): 0.37
+ | Mean Accuracy (Test): 0.90
+Generation 425 | Best fitness (Train): 0.43 | Best fitness in generation (Train): 0.49 | Mean fitness (Train): 0.60 | Mean fitness (Test): 0.40
+ | Mean Accuracy (Test): 0.89
+Generation 430 | Best fitness (Train): 0.41 | Best fitness in generation (Train): 0.43 | Mean fitness (Train): 0.58 | Mean fitness (Test): 0.39
+ | Mean Accuracy (Test): 0.90
+Generation 435 | Best fitness (Train): 0.41 | Best fitness in generation (Train): 0.42 | Mean fitness (Train): 0.53 | Mean fitness (Test): 0.40
+ | Mean Accuracy (Test): 0.88
+Generation 440 | Best fitness (Train): 0.41 | Best fitness in generation (Train): 0.47 | Mean fitness (Train): 0.59 | Mean fitness (Test): 0.43
+ | Mean Accuracy (Test): 0.87
+Generation 445 | Best fitness (Train): 0.41 | Best fitness in generation (Train): 0.50 | Mean fitness (Train): 0.65 | Mean fitness (Test): 0.37
+ | Mean Accuracy (Test): 0.89
+Generation 450 | Best fitness (Train): 0.41 | Best fitness in generation (Train): 0.43 | Mean fitness (Train): 0.53 | Mean fitness (Test): 0.36
+ | Mean Accuracy (Test): 0.90
+Generation 455 | Best fitness (Train): 0.39 | Best fitness in generation (Train): 0.47 | Mean fitness (Train): 0.61 | Mean fitness (Test): 0.37
+ | Mean Accuracy (Test): 0.89
+Generation 460 | Best fitness (Train): 0.39 | Best fitness in generation (Train): 0.47 | Mean fitness (Train): 0.59 | Mean fitness (Test): 0.39
+ | Mean Accuracy (Test): 0.89
+Generation 465 | Best fitness (Train): 0.39 | Best fitness in generation (Train): 0.48 | Mean fitness (Train): 0.62 | Mean fitness (Test): 0.36
+ | Mean Accuracy (Test): 0.88
+Generation 470 | Best fitness (Train): 0.39 | Best fitness in generation (Train): 0.48 | Mean fitness (Train): 0.62 | Mean fitness (Test): 0.34
+ | Mean Accuracy (Test): 0.89
+Generation 475 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.50 | Mean fitness (Train): 0.61 | Mean fitness (Test): 0.36
+ | Mean Accuracy (Test): 0.90
+Generation 480 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.46 | Mean fitness (Train): 0.57 | Mean fitness (Test): 0.40
+ | Mean Accuracy (Test): 0.89
+Generation 485 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.52 | Mean fitness (Train): 0.62 | Mean fitness (Test): 0.36
+ | Mean Accuracy (Test): 0.89
+Generation 490 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.42 | Mean fitness (Train): 0.56 | Mean fitness (Test): 0.42
+ | Mean Accuracy (Test): 0.88
+Generation 495 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.46 | Mean fitness (Train): 0.60 | Mean fitness (Test): 0.33
+ | Mean Accuracy (Test): 0.90
+Generation 500 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.42 | Mean fitness (Train): 0.51 | Mean fitness (Test): 0.35
+ | Mean Accuracy (Test): 0.90
+Generation 505 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.45 | Mean fitness (Train): 0.55 | Mean fitness (Test): 0.41
+ | Mean Accuracy (Test): 0.88
+Generation 510 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.40 | Mean fitness (Train): 0.52 | Mean fitness (Test): 0.34
+ | Mean Accuracy (Test): 0.89
+Generation 515 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.58 | Mean fitness (Train): 0.69 | Mean fitness (Test): 0.35
+ | Mean Accuracy (Test): 0.89
+Generation 520 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.40 | Mean fitness (Train): 0.51 | Mean fitness (Test): 0.36
+ | Mean Accuracy (Test): 0.89
+Generation 525 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.43 | Mean fitness (Train): 0.55 | Mean fitness (Test): 0.39
+ | Mean Accuracy (Test): 0.89
+Generation 530 | Best fitness (Train): 0.36 | Best fitness in generation (Train): 0.44 | Mean fitness (Train): 0.55 | Mean fitness (Test): 0.31
+ | Mean Accuracy (Test): 0.91
+Generation 535 | Best fitness (Train): 0.35 | Best fitness in generation (Train): 0.35 | Mean fitness (Train): 0.45 | Mean fitness (Test): 0.39
+ | Mean Accuracy (Test): 0.89
+Generation 540 | Best fitness (Train): 0.35 | Best fitness in generation (Train): 0.50 | Mean fitness (Train): 0.60 | Mean fitness (Test): 0.38
+ | Mean Accuracy (Test): 0.89
+Generation 545 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.32 | Mean fitness (Train): 0.42 | Mean fitness (Test): 0.31
+ | Mean Accuracy (Test): 0.90
+Generation 550 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.45 | Mean fitness (Train): 0.57 | Mean fitness (Test): 0.30
+ | Mean Accuracy (Test): 0.91
+Generation 555 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.43 | Mean fitness (Train): 0.52 | Mean fitness (Test): 0.28
+ | Mean Accuracy (Test): 0.90
+Generation 560 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.39 | Mean fitness (Train): 0.49 | Mean fitness (Test): 0.32
+ | Mean Accuracy (Test): 0.91
+Generation 565 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.39 | Mean fitness (Train): 0.50 | Mean fitness (Test): 0.35
+ | Mean Accuracy (Test): 0.91
+Generation 570 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.37 | Mean fitness (Train): 0.48 | Mean fitness (Test): 0.35
+ | Mean Accuracy (Test): 0.90
+Generation 575 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.44 | Mean fitness (Train): 0.61 | Mean fitness (Test): 0.26
+ | Mean Accuracy (Test): 0.94
+Generation 580 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.42 | Mean fitness (Train): 0.51 | Mean fitness (Test): 0.32
+ | Mean Accuracy (Test): 0.90
+Generation 585 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.33 | Mean fitness (Train): 0.44 | Mean fitness (Test): 0.26
+ | Mean Accuracy (Test): 0.91
+Generation 590 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.39 | Mean fitness (Train): 0.48 | Mean fitness (Test): 0.28
+ | Mean Accuracy (Test): 0.91
+Generation 595 | Best fitness (Train): 0.32 | Best fitness in generation (Train): 0.34 | Mean fitness (Train): 0.48 | Mean fitness (Test): 0.28
+ | Mean Accuracy (Test): 0.91
+Generation 600 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.41 | Mean fitness (Train): 0.50 | Mean fitness (Test): 0.27
+ | Mean Accuracy (Test): 0.91
+Generation 605 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.35 | Mean fitness (Train): 0.44 | Mean fitness (Test): 0.34
+ | Mean Accuracy (Test): 0.91
+Generation 610 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.33 | Mean fitness (Train): 0.43 | Mean fitness (Test): 0.32
+ | Mean Accuracy (Test): 0.91
+Generation 615 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.42 | Mean fitness (Train): 0.52 | Mean fitness (Test): 0.32
+ | Mean Accuracy (Test): 0.90
+Generation 620 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.40 | Mean fitness (Train): 0.50 | Mean fitness (Test): 0.34
+ | Mean Accuracy (Test): 0.89
+Generation 625 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.41 | Mean fitness (Train): 0.50 | Mean fitness (Test): 0.38
+ | Mean Accuracy (Test): 0.89
+Generation 630 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.38 | Mean fitness (Train): 0.45 | Mean fitness (Test): 0.37
+ | Mean Accuracy (Test): 0.90
+Generation 635 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.37 | Mean fitness (Train): 0.46 | Mean fitness (Test): 0.31
+ | Mean Accuracy (Test): 0.91
+Generation 640 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.40 | Mean fitness (Train): 0.49 | Mean fitness (Test): 0.30
+ | Mean Accuracy (Test): 0.91
+Generation 645 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.45 | Mean fitness (Train): 0.55 | Mean fitness (Test): 0.30
+ | Mean Accuracy (Test): 0.92
+Generation 650 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.37 | Mean fitness (Train): 0.46 | Mean fitness (Test): 0.33
+ | Mean Accuracy (Test): 0.90
+Generation 655 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.36 | Mean fitness (Train): 0.47 | Mean fitness (Test): 0.34
+ | Mean Accuracy (Test): 0.91
+Generation 660 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.37 | Mean fitness (Train): 0.47 | Mean fitness (Test): 0.29
+ | Mean Accuracy (Test): 0.90
+Generation 665 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.40 | Mean fitness (Train): 0.49 | Mean fitness (Test): 0.34
+ | Mean Accuracy (Test): 0.90
+Generation 670 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.34 | Mean fitness (Train): 0.43 | Mean fitness (Test): 0.32
+ | Mean Accuracy (Test): 0.91
+Generation 675 | Best fitness (Train): 0.29 | Best fitness in generation (Train): 0.41 | Mean fitness (Train): 0.49 | Mean fitness (Test): 0.27
+ | Mean Accuracy (Test): 0.91
+Generation 680 | Best fitness (Train): 0.28 | Best fitness in generation (Train): 0.40 | Mean fitness (Train): 0.47 | Mean fitness (Test): 0.30
+ | Mean Accuracy (Test): 0.91
+Generation 685 | Best fitness (Train): 0.28 | Best fitness in generation (Train): 0.37 | Mean fitness (Train): 0.45 | Mean fitness (Test): 0.40
+ | Mean Accuracy (Test): 0.88
