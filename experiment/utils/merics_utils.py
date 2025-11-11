@@ -44,15 +44,12 @@ def custom_metrics_fn(key: jax.Array,
         "generation_counter": state.generation_counter,
         "best_fitness_in_generation": fitness[best_idx_in_generation],
         "mean_fitness_in_generation": fitness.mean(),
-        "best_solution_in_generation": population[best_idx_in_generation],
         "best_fitness": state.best_fitness,
-        "best_solution": state.best_solution,
-        "best_solution_norm": jnp.linalg.norm(state.best_solution),
     }
 
 
 # aggregation
-def build_updated_metrics(fitness: jnp.ndarray, info: Dict[str, Any], algo_metrics: Dict[str, Any], start_time: float,
+def build_updated_metrics(info: Dict[str, Any], algo_metrics: Dict[str, Any], run_time: float,
                           test_metrics: Dict[str, Any], minimize_fitness: bool, metric_keys=None) -> Dict[str, Any]:
     if metric_keys is None:
         metric_keys = METRIC_KEYS
@@ -68,8 +65,7 @@ def build_updated_metrics(fitness: jnp.ndarray, info: Dict[str, Any], algo_metri
         **algo_metrics,
         **extra_metrics,
         **test_metrics,
-        "gen_time_sec": time.time() - start_time,
-        "mean_fitness_in_generation": jnp.mean(fitness),
+        "gen_time_sec": run_time
     }
 
     # normalize sign when underlying env minimizes

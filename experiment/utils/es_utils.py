@@ -67,22 +67,23 @@ def step(algorithm: DistributionBasedAlgorithm,
          carry,
          key):
     state, params, problem_state = carry
-    k1, k2, k3 = jax.random.split(key, 3)
+    key_ask, key_eval, key_tell = jax.random.split(key, 3)
 
     start_ts = time.time()
-    population, state = algorithm.ask(k1, state, params)
-    fitness, problem_state, info = problem.eval(k2, population, problem_state)
+    population, state = algorithm.ask(key_ask, state, params)
+    fitness, problem_state, info = problem.eval(key_eval, population, problem_state)
     # fitness, problem_state, info = batched_eval(algorithm, problem, 128, k2, population, problem_state)
     fitness = -fitness if minimize_fitness else fitness
-    state, metrics = algorithm.tell(k3, population, fitness, state, params)
+    state, metrics = algorithm.tell(key_tell, population, fitness, state, params)
+
+    end_ts = time.time()
 
     test_metrics = eval_test(algorithm, problem, minimize_fitness, key, state, problem_state)
 
     out_metrics = build_updated_metrics(
-        fitness=fitness,
         info=info,
         algo_metrics=metrics,
-        start_time=start_ts,
+        run_time=end_ts - start_ts,
         test_metrics=test_metrics,
         minimize_fitness=minimize_fitness
     )

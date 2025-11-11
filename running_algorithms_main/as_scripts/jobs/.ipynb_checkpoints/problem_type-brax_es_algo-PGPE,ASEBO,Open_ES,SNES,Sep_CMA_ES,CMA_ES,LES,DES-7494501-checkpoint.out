@@ -1,13 +1,0 @@
-Fri 17 Oct 2025 00:17:36 IDT
-
-SLURM_JOBID:		 7494501
-SLURM_JOB_NODELIST:	 cs-6000-04 
-
-configuration parmas running: problem_type=brax es_algorithms=PGPE,ASEBO,Open_ES,SNES,Sep_CMA_ES,CMA_ES,LES,DES
-Loading Problems ..:   0%|                                                              | 0/12 [00:00<?, ?it/s]/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/site-packages/brax/io/mjcf.py:480: UserWarning: Brax System, piplines and environments are not actively being maintained. Please see MJX for a well maintained JAX-based physics engine: https://github.com/google-deepmind/mujoco/tree/main/mjx. For a host of environments that use MJX, see: https://github.com/google-deepmind/mujoco_playground.
-  warnings.warn(
-E1017 00:17:54.943296 2425086 hlo_lexer.cc:443] Failed to parse int literal: 1986902096214075708017
-Successfully loaded: ant
-
-running the experiment ... [../../results/BraxProblem/ant/PGPE/0]
-Generation 016 | Mean fitness (Test): -11.74

@@ -1,12 +1,0 @@
-Sun 09 Nov 2025 00:24:51 IST
-
-SLURM_JOBID:		 8041823
-SLURM_JOB_NODELIST:	 ise-3090-02 
-
-configuration parmas running: problem_type=brax es_algorithms=CMA_ES
-Loading Problems ..:   0%|                                                              | 0/12 [00:00<?, ?it/s]/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/site-packages/brax/io/mjcf.py:480: UserWarning: Brax System, piplines and environments are not actively being maintained. Please see MJX for a well maintained JAX-based physics engine: https://github.com/google-deepmind/mujoco/tree/main/mjx. For a host of environments that use MJX, see: https://github.com/google-deepmind/mujoco_playground.
-  warnings.warn(
-E1109 00:25:11.855874 2565122 hlo_lexer.cc:443] Failed to parse int literal: 1986902096214075708017
-Successfully loaded: ant
-
-running the experiment ... [../../results/BraxProblem/ant/CMA_ES/0]

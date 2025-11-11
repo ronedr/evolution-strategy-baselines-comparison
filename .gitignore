@@ -1,7 +1,6 @@
 .venv/
 .idea/
-evaluation_algorithms/
-*/__pycache__/
+__pycache__/
 *.pyc
-*/.ipynb_checkpoints/
-!/notebooks/
+.ipynb_checkpoints/
+

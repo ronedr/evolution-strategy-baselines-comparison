@@ -1,6 +1,0 @@
-Wed 22 Oct 2025 22:02:24 IDT
-
-SLURM_JOBID:		 7735710
-SLURM_JOB_NODELIST:	 cs-pheno-13 
-
-configuration parmas running: problem_type=vision es_algorithms=SNES

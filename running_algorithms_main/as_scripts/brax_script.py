@@ -13,19 +13,35 @@ from experiment.run_experiments import run_experiment_permutations
 # running params
 num_generations = 1000
 population_size = 256
-eval_batch_size = 128
+# eval_batch_size = 128
 log_period = 10
 result_dir = "../../results"
 problems_brax_envs = list(brax_envs._envs.keys())
 
+lr_schedule = optax.exponential_decay(
+    init_value=0.01,
+    transition_steps=num_generations,
+    decay_rate=0.1,
+)
+
+std_schedule = optax.exponential_decay(
+    init_value=0.05,
+    transition_steps=num_generations,
+    decay_rate=0.2,
+)
+
 # algorithms
 es_dict = {
-    "PGPE": {"optimizer": optax.adam(learning_rate=0.02)},
-    "LES": {},
-    "Open_ES": {"optimizer": optax.adam(learning_rate=0.05)},
-    "SNES": {},
     "Sep_CMA_ES": {},
-    "CMA_ES": {},
+    "Open_ES": {    
+        "optimizer":optax.adam(learning_rate=lr_schedule),
+        "std_schedule": std_schedule,
+    },
+    "SNES": {},
+    "PGPE": {
+        "optimizer": optax.adam(learning_rate=0.02)
+    },
+    "LES": {},
     "DES": {},
 }
 
@@ -45,7 +61,7 @@ for env_name in tqdm(problems_brax_envs, desc="Loading Problems .."):
     try:
         action_num, out_fn = get_problem_settings(env_name)
         problem = Problem(
-            num_rollouts=1,
+            num_rollouts=16,
             env_name=env_name,
             policy=MLP(layer_sizes=(32, 32, 32, 32, action_num), output_fn=out_fn),
             episode_length=1000,
@@ -60,7 +76,7 @@ for env_name in tqdm(problems_brax_envs, desc="Loading Problems .."):
             result_dir=result_dir,
             run_again_if_exist=False,
             log_period=log_period,
-            eval_batch_size=eval_batch_size,
+            eval_batch_size=None,
             seeds=list(range(0, 5)),
         )
 

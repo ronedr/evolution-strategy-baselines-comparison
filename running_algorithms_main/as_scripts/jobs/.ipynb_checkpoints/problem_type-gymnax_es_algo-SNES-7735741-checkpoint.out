@@ -1,13 +1,0 @@
-Wed 22 Oct 2025 22:07:29 IDT
-
-SLURM_JOBID:		 7735741
-SLURM_JOB_NODELIST:	 ise-3090-02 
-
-configuration parmas running: problem_type=gymnax es_algorithms=SNES
-Loading Problems ..:   0%|                                       | 0/4 [00:00<?, ?it/s]/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/site-packages/jax/_src/ops/scatter.py:93: FutureWarning: scatter inputs have incompatible types: cannot safely cast value from dtype=int32 to dtype=bool with jax_numpy_dtype_promotion='standard'. In future JAX releases this will result in an error.
-  warnings.warn(
-Successfully loaded: Asterix-MinAtar
-running the experiment ... [../../results/GymnaxProblem/Asterix-MinAtar/SNES/0]
-Generation 016 | Mean fitness (Test): 0.00
-Generation 032 | Mean fitness (Test): 0.00
-Generation 048 | Mean fitness (Test): 0.00

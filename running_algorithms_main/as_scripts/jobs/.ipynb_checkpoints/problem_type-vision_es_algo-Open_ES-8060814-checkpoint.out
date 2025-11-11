@@ -1,9 +1,0 @@
-Mon 10 Nov 2025 07:21:56 IST
-
-SLURM_JOBID:		 8060814
-SLURM_JOB_NODELIST:	 ise-3090-01 
-
-configuration parmas running: problem_type=vision es_algorithms=Open_ES
-Successfully loaded: MNIST
-Loading Problems ..:   0%|                                                                    | 0/4 [00:00<?, ?it/s]
-running the experiment ... [../../results/TorchVisionProblem/MNIST/Open_ES/0]

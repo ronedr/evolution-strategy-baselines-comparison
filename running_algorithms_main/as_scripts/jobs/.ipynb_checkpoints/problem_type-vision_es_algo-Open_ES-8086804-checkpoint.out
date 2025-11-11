@@ -1,8 +1,0 @@
-Mon 10 Nov 2025 23:06:12 IST
-
-SLURM_JOBID:		 8086804
-SLURM_JOB_NODELIST:	 cs-3090-02 
-
-configuration parmas running: problem_type=vision es_algorithms=Open_ES
-/home/ronedr/.conda/envs/ronedr_es_env/bin/python: can't open file '/home/ronedr/evolution-strategy-baselines-comparison/running_algorithms_main/as_scripts/vision_script_as_example.py': [Errno 2] No such file or directory
-srun: error: cs-3090-02: task 0: Exited with exit code 2

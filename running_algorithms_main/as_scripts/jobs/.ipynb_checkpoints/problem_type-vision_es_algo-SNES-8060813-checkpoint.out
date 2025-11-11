@@ -1,9 +1,0 @@
-Mon 10 Nov 2025 07:21:57 IST
-
-SLURM_JOBID:		 8060813
-SLURM_JOB_NODELIST:	 ise-3090-02 
-
-configuration parmas running: problem_type=vision es_algorithms=SNES
-Successfully loaded: MNIST
-Loading Problems ..:   0%|                                                                    | 0/4 [00:00<?, ?it/s]
-running the experiment ... [../../results/TorchVisionProblem/MNIST/SNES/0]

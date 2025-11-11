@@ -1,6 +1,0 @@
-Sun 09 Nov 2025 00:19:22 IST
-
-SLURM_JOBID:		 8041804
-SLURM_JOB_NODELIST:	 cs-pheno-03 
-
-configuration parmas running: problem_type=bbob es_algorithms=DES,CMA_ES,Sep_CMA_ES,SNES,Open_ES,PGPE
