@@ -68,8 +68,9 @@ class DeepNoiseModel:
     # -------------------------------------------------------
     # REINFORCE update
     # -------------------------------------------------------
+    @staticmethod
     @jax.jit
-    def reinforce_step(self, state, log_prob, rewards):
+    def reinforce_step(state, log_prob, rewards):
         """
         REINFORCE loss = -(reward * log_prob)
         log_prob and reward shapes: (population_size,)
