@@ -15,7 +15,6 @@ class DeepNoiseModel:
             self,
             rng_key,
             input_dim,
-            latent_dim=32,
             hidden_dims=(128, 64),
             lr=1e-4,
     ):
@@ -24,7 +23,7 @@ class DeepNoiseModel:
         # --- build encoder
         self.encoder = VAEEncoder(
             input_dim=input_dim,
-            latent_dim=latent_dim,
+            latent_dim=input_dim,
             hidden_dims=hidden_dims,
         )
 

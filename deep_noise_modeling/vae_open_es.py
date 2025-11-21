@@ -19,6 +19,7 @@ from evosax.algorithms.distribution_based.base import (
     State as BaseState,
     metrics_fn,
 )
+from deep_noise_model import DeepNoiseModel, gaussian_log_prob
 
 
 @struct.dataclass
@@ -26,6 +27,8 @@ class State(BaseState):
     mean: jax.Array
     std: jax.Array
     opt_state: optax.OptState
+
+    noise_log_prob: jax.Array = None
 
 
 @struct.dataclass
@@ -45,6 +48,8 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             std_schedule: Callable = optax.constant_schedule(1.0),
             fitness_shaping_fn: Callable = centered_rank_fitness_shaping_fn,
             metrics_fn: Callable = metrics_fn,
+            lr_noise_model: float = 1e-4,
+            hidden_dims: tuple = (128, 64),
     ):
         """Initialize OpenAI-ES."""
         assert population_size % 2 == 0, "Population size must be even."
@@ -58,6 +63,13 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         # Antithetic sampling
         self.use_antithetic_sampling = use_antithetic_sampling
+
+        self.deep_noise_model = DeepNoiseModel(
+            rng_key=jax.random.PRNGKey(42),
+            input_dim=self.num_dims,  # encoder input == num_dims
+            hidden_dims=hidden_dims,
+            lr=lr_noise_model,
+        )
 
     @property
     def _default_params(self) -> Params:
@@ -80,12 +92,29 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             state: State,
             params: Params,
     ) -> tuple[Population, State]:
+
+        features = state.mean[None, :]
+
         if self.use_antithetic_sampling:
-            z_plus = jax.random.normal(key, (self.population_size // 2, self.num_dims))
+            pop_half = self.population_size // 2
+
+            z_plus, logp_plus, aux_plus, key = self.deep_noise_model.generate_noise(
+                key,
+                features=features,
+                shape=(pop_half, self.num_dims),
+            )
             z = jnp.concatenate([z_plus, -z_plus])
+            logp_minus = gaussian_log_prob(aux_plus["mu"], aux_plus["std"], -z_plus)
+            logp = jnp.concatenate([logp_plus, logp_minus])  # symmetric
         else:
-            z = jax.random.normal(key, (self.population_size, self.num_dims))
+            z, logp, aux, key = self.deep_noise_model.generate_noise(
+                key,
+                features=features,
+                shape=(self.population_size, self.num_dims),
+            )
+
         population = state.mean + state.std * z
+        state = state.replace(noise_log_prob=logp)
         return population, state
 
     def _tell(
@@ -105,8 +134,19 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         updates, opt_state = self.optimizer.update(grad, state.opt_state)
         mean = optax.apply_updates(state.mean, updates)
 
+        # REINFORCE loss to update noise model
+        rewards = self.fitness_shaping_fn(fitness)
+
+        self.deep_noise_model.update(
+            log_prob=state.noise_log_prob,
+            rewards=rewards,
+        )
+
         return state.replace(
             mean=mean,
             std=self.std_schedule(state.generation_counter),
             opt_state=opt_state,
+            best_fitness=state.best_fitness,
+            generation_counter=state.generation_counter + 1,
+            best_solution=state.best_solution
         )
