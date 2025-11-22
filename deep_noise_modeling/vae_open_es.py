@@ -161,6 +161,22 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             state: State,
             params: Params,
     ) -> State:
+        # Compute best in population
+        new_best = fitness.min()
+        best_idx = jnp.argmin(fitness)
+        new_best_sol = population[best_idx]
+
+        # Use JAX control flow
+        state = jax.lax.cond(
+            new_best < state.best_fitness,
+            lambda st: st.replace(
+                best_fitness=new_best,
+                best_solution=new_best_sol,
+            ),
+            lambda st: st,
+            state,
+        )
+
         # Compute grad
         grad = jnp.dot(fitness, (population - state.mean) / state.std) / (
                 self.population_size * state.std
@@ -171,7 +187,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         mean = optax.apply_updates(state.mean, updates)
 
         # REINFORCE loss to update noise model
-        rewards = -fitness  # minimization
+        rewards = -(fitness - fitness.mean())
 
         if not self.use_best_individual_augmentation:
             new_noise_state, _ = self.deep_noise_model.update(
