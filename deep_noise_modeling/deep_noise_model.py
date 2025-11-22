@@ -1,9 +1,13 @@
+import functools
+
 import jax
 import jax.numpy as jnp
 import optax
 from flax.training.train_state import TrainState
 from vae_flax import VAEEncoder
 
+
+# from evosax.algorithms import EvoTF_ES
 
 def gaussian_log_prob(mu, std, x):
     var = std ** 2 + 1e-8
@@ -13,45 +17,41 @@ def gaussian_log_prob(mu, std, x):
 class DeepNoiseModel:
     def __init__(
             self,
-            rng_key,
             input_dim,
             hidden_dims=(128, 64),
             lr=1e-4,
     ):
-        self.rng = rng_key
-
-        # --- build encoder
+        self.input_dim = input_dim
+        self.hidden_dims = hidden_dims
+        self.lr = lr
         self.encoder = VAEEncoder(
             input_dim=input_dim,
             latent_dim=input_dim,
             hidden_dims=hidden_dims,
         )
 
-        # init params
-        dummy = jnp.zeros((1, input_dim))
-        variables = self.encoder.init(self.rng, dummy)
-        self.state = TrainState.create(
+        self.tx = optax.adam(lr)
+
+    @functools.partial(jax.jit, static_argnames=("self",))
+    def init(self, rng):
+        """Returns TrainState, with no Python-side mutation."""
+        dummy = jnp.zeros((1, self.input_dim))
+        variables = self.encoder.init(rng, dummy)
+        return TrainState.create(
             apply_fn=self.encoder.apply,
             params=variables["params"],
-            tx=optax.adam(lr),
+            tx=self.tx,
         )
 
-    # -------------------------------------------------------
-    # Noise generation (replaces OpenES random sampling step)
-    # -------------------------------------------------------
-    def generate_noise(self, rng, features, shape):
+    @functools.partial(jax.jit, static_argnames=("self", "shape"))
+    def generate_noise(self, noise_state, rng, features, shape):
         """
-        features: jnp.ndarray shape (batch, input_dim)
-        shape: (population_size, num_dims)
-
-        returns:
-            noise: (pop, dims)
-            log_prob: (pop,)
-            aux: a dict storing mu,std,eps useful for training
+        noise_state: TrainState (carried in ES.State)
+        features: (batch, input_dim)
+        shape: (popsize, num_dims)
         """
-        mu, std, _ = self.state.apply_fn({"params": self.state.params}, features)
+        mu, std, _ = noise_state.apply_fn({"params": noise_state.params}, features)
 
-        # broadcast to match population shape
         mu = jnp.broadcast_to(mu, shape)
         std = jnp.broadcast_to(std, shape)
 
@@ -59,10 +59,9 @@ class DeepNoiseModel:
         eps = jax.random.normal(sub, shape)
 
         noise = mu + std * eps
-
         log_prob = gaussian_log_prob(mu, std, noise)
 
-        aux = {"mu": mu, "std": std, "eps": eps}
+        aux = {"mu": mu, "std": std}
         return noise, log_prob, aux, rng
 
     # -------------------------------------------------------
@@ -70,21 +69,16 @@ class DeepNoiseModel:
     # -------------------------------------------------------
     @staticmethod
     @jax.jit
-    def reinforce_step(state, log_prob, rewards):
-        """
-        REINFORCE loss = -(reward * log_prob)
-        log_prob and reward shapes: (population_size,)
-        """
+    def reinforce_step(noise_state, log_prob, rewards):
+        """Pure function: returns new TrainState + loss."""
 
         def loss_fn(params):
-            loss = -(log_prob * rewards).mean()
-            return loss
+            return -(log_prob * rewards).mean()
 
-        grad_fn = jax.value_and_grad(loss_fn)
-        loss, grads = grad_fn(state.params)
-        state = state.apply_gradients(grads=grads)
-        return state, loss
+        loss, grads = jax.value_and_grad(loss_fn)(noise_state.params)
+        new_state = noise_state.apply_gradients(grads=grads)
+        return new_state, loss
 
-    def update(self, log_prob, rewards):
-        self.state, loss = self.reinforce_step(self.state, log_prob, rewards)
-        return loss
+    @functools.partial(jax.jit, static_argnames=("self",))
+    def update(self, noise_state, log_prob, rewards):
+        return DeepNoiseModel.reinforce_step(noise_state, log_prob, rewards)

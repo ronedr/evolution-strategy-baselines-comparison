@@ -5,6 +5,7 @@
 """
 
 from collections.abc import Callable
+from typing import Any
 
 import jax
 import jax.numpy as jnp
@@ -28,7 +29,8 @@ class State(BaseState):
     std: jax.Array
     opt_state: optax.OptState
 
-    noise_log_prob: jax.Array = None
+    noise_log_prob: jax.Array | None = None
+    noise_state: Any = None  # TrainState for DeepNoiseModel
 
 
 @struct.dataclass
@@ -65,7 +67,6 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         self.use_antithetic_sampling = use_antithetic_sampling
 
         self.deep_noise_model = DeepNoiseModel(
-            rng_key=jax.random.PRNGKey(42),
             input_dim=self.num_dims,  # encoder input == num_dims
             hidden_dims=hidden_dims,
             lr=lr_noise_model,
@@ -76,6 +77,9 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         return Params()
 
     def _init(self, key: jax.Array, params: Params) -> State:
+        key, sub = jax.random.split(key)
+        noise_state = self.deep_noise_model.init(sub)
+
         state = State(
             mean=jnp.full((self.num_dims,), jnp.nan),
             std=self.std_schedule(0),
@@ -83,6 +87,8 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             best_solution=jnp.full((self.num_dims,), jnp.nan),
             best_fitness=jnp.inf,
             generation_counter=0,
+            noise_state=noise_state,
+            noise_log_prob=None,
         )
         return state
 
@@ -99,15 +105,18 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             pop_half = self.population_size // 2
 
             z_plus, logp_plus, aux_plus, key = self.deep_noise_model.generate_noise(
+                state.noise_state,
                 key,
                 features=features,
                 shape=(pop_half, self.num_dims),
             )
+
             z = jnp.concatenate([z_plus, -z_plus])
             logp_minus = gaussian_log_prob(aux_plus["mu"], aux_plus["std"], -z_plus)
             logp = jnp.concatenate([logp_plus, logp_minus])  # symmetric
         else:
             z, logp, aux, key = self.deep_noise_model.generate_noise(
+                state.noise_state,
                 key,
                 features=features,
                 shape=(self.population_size, self.num_dims),
@@ -138,9 +147,10 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         # rewards = self.fitness_shaping_fn(fitness, state, params)
         rewards = fitness - jnp.mean(fitness)
 
-        self.deep_noise_model.update(
-            log_prob=state.noise_log_prob,
-            rewards=rewards,
+        new_noise_state, _ = self.deep_noise_model.update(
+            state.noise_state,
+            state.noise_log_prob,
+            rewards,
         )
 
         return state.replace(
@@ -149,5 +159,6 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             opt_state=opt_state,
             best_fitness=state.best_fitness,
             generation_counter=state.generation_counter + 1,
-            best_solution=state.best_solution
+            best_solution=state.best_solution,
+            noise_state=new_noise_state,
         )
