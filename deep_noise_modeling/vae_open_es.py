@@ -55,7 +55,8 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             lr_noise_model: float = 1e-4,
             hidden_dims: tuple = (128, 64),
             use_best_individual_augmentation: bool = False,
-            alpha=2
+            alpha=2,
+            normalize_fitness_score=False
     ):
         """Initialize OpenAI-ES."""
         assert population_size % 2 == 0, "Population size must be even."
@@ -78,6 +79,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         self.use_best_individual_augmentation = use_best_individual_augmentation
         self.alpha = alpha
+        self.normalize_fitness_score = normalize_fitness_score
 
     @property
     def _default_params(self) -> Params:
@@ -187,7 +189,10 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         mean = optax.apply_updates(state.mean, updates)
 
         # REINFORCE loss to update noise model
-        rewards = -(fitness - fitness.mean())
+        if self.normalize_fitness_score:
+            rewards = -(fitness - fitness.mean())
+        else:
+            rewards = -fitness
 
         if not self.use_best_individual_augmentation:
             new_noise_state, _ = self.deep_noise_model.update(
