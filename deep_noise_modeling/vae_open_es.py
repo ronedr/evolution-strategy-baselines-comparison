@@ -144,7 +144,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         mean = optax.apply_updates(state.mean, updates)
 
         # REINFORCE loss to update noise model
-        rewards = fitness - jnp.mean(fitness)
+        rewards = (fitness - jnp.mean(fitness)) / (jnp.std(fitness) + 1e-8)
 
         new_noise_state, _ = self.deep_noise_model.update(
             state.noise_state,
