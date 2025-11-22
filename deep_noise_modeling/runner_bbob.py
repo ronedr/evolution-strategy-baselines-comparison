@@ -3,8 +3,8 @@ import jax.numpy as jnp
 import optax
 
 from evosax.problems.bbob.bbob_fns import bbob_fns
-from vae_open_es import VAE_Open_ES as ES
-# from evosax.algorithms import Open_ES as ES
+# from vae_open_es import VAE_Open_ES as ES
+from evosax.algorithms import Open_ES as ES
 
 # -------------------------
 # 1. Choose BBOB function
@@ -12,8 +12,9 @@ from vae_open_es import VAE_Open_ES as ES
 fn_name = "sphere"  # <-- change this to: rastrigin, rosenbrock, bent_cigar, etc.
 bbob_fn = bbob_fns[fn_name]
 
-num_dims = 50  # dimensionality of the challenge
-
+num_dims = 1500  # dimensionality of the challenge
+POPULATION_SIZE = 1024
+num_generations = 1000
 
 # -------------------------
 # 2. BBOB function wrapper
@@ -48,7 +49,6 @@ print("Problem dimensionality:", num_dims)
 # -------------------------
 # 4. ES hyperparameters
 # -------------------------
-num_generations = 200
 
 lr_schedule = optax.exponential_decay(
     init_value=0.05,
@@ -66,10 +66,11 @@ std_schedule = optax.exponential_decay(
 # 5. Instantiate your ES
 # -------------------------
 es = ES(
-    population_size=50,
+    population_size=POPULATION_SIZE,
     solution=solution,
     optimizer=optax.adam(learning_rate=lr_schedule),
     std_schedule=std_schedule,
+    # use_best_individual_augmentation=True
 )
 
 params = es.default_params
