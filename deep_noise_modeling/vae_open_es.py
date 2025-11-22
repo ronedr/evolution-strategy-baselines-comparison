@@ -31,6 +31,8 @@ class State(BaseState):
 
     noise_log_prob: jax.Array | None = None
     noise_state: Any = None  # TrainState for DeepNoiseModel
+    noise_aux_mu: jax.Array | None = None
+    noise_aux_std: jax.Array | None = None
 
 
 @struct.dataclass
@@ -52,6 +54,8 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             metrics_fn: Callable = metrics_fn,
             lr_noise_model: float = 1e-4,
             hidden_dims: tuple = (128, 64),
+            use_best_individual_augmentation: bool = False,
+            alpha=2
     ):
         """Initialize OpenAI-ES."""
         assert population_size % 2 == 0, "Population size must be even."
@@ -71,6 +75,9 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             hidden_dims=hidden_dims,
             lr=lr_noise_model,
         )
+
+        self.use_best_individual_augmentation = use_best_individual_augmentation
+        self.alpha = alpha
 
     @property
     def _default_params(self) -> Params:
@@ -104,7 +111,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         if self.use_antithetic_sampling:
             pop_half = self.population_size // 2
 
-            z_plus, logp_plus, aux_plus, key = self.deep_noise_model.generate_noise(
+            z_plus, logp_plus, aux, key = self.deep_noise_model.generate_noise(
                 state.noise_state,
                 key,
                 features=features,
@@ -112,7 +119,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             )
 
             z = jnp.concatenate([z_plus, -z_plus])
-            logp_minus = gaussian_log_prob(aux_plus["mu"], aux_plus["std"], -z_plus)
+            logp_minus = gaussian_log_prob(aux["mu"], aux["std"], -z_plus)
             logp = jnp.concatenate([logp_plus, logp_minus])  # symmetric
         else:
             z, logp, aux, key = self.deep_noise_model.generate_noise(
@@ -123,8 +130,28 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             )
 
         population = state.mean + state.std * z
-        state = state.replace(noise_log_prob=logp)
+        state = state.replace(noise_log_prob=logp, noise_aux_mu=aux["mu"], noise_aux_std=aux["std"])
         return population, state
+
+    def add_best_individual_augmentation(self, state, population, fitness):
+        best_fitness = state.best_fitness
+        best_individual = state.best_solution
+
+        delta_from_best_individual = population - best_individual
+        state_vae_mu = state.noise_aux_mu
+        state_vae_std = state.noise_aux_std
+
+        if self.use_antithetic_sampling:
+            state_vae_mu = jnp.concatenate([state_vae_mu, state_vae_mu])
+            state_vae_std = jnp.concatenate([state_vae_std, state_vae_std])
+
+        logprobs_for_noise_delta = gaussian_log_prob(
+            state_vae_mu, state_vae_std, delta_from_best_individual
+        )
+        # reshape best fitness to popsize and scale by alpha
+        shaped_best_fitness = self.alpha * jnp.ones_like(fitness) * best_fitness
+        aug_rewards = -shaped_best_fitness
+        return aug_rewards, logprobs_for_noise_delta
 
     def _tell(
             self,
@@ -144,13 +171,23 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         mean = optax.apply_updates(state.mean, updates)
 
         # REINFORCE loss to update noise model
-        rewards = (fitness - jnp.mean(fitness)) / (jnp.std(fitness) + 1e-8)
+        rewards = -fitness  # minimization
 
-        new_noise_state, _ = self.deep_noise_model.update(
-            state.noise_state,
-            state.noise_log_prob,
-            rewards,
-        )
+        if not self.use_best_individual_augmentation:
+            new_noise_state, _ = self.deep_noise_model.update(
+                state.noise_state,
+                state.noise_log_prob,
+                rewards,
+            )
+        else:
+            aug_rewards, logprobs_for_noise_delta = self.add_best_individual_augmentation(state, population, fitness)
+            cat_rewards = jnp.concatenate([rewards, aug_rewards])
+            cat_log_probs = jnp.concatenate([state.noise_log_prob, logprobs_for_noise_delta])
+            new_noise_state, _ = self.deep_noise_model.update(
+                state.noise_state,
+                cat_log_probs,
+                cat_rewards,
+            )
 
         return state.replace(
             mean=mean,
