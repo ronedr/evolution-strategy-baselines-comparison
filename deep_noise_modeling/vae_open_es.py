@@ -175,13 +175,16 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
     def add_best_individual_augmentation(self, key, state, population, fitness):
         # Sample from top-k
-        best_ind_indexes = jax.random.randint(key, shape=(), minval=0, maxval=self.k)
-
-        best_individual = state.top_k_solutions[best_ind_indexes]
+        # We sample one top-k individual for EACH individual in the population
+        pop_size = population.shape[0]
+        idx = jax.random.randint(key, shape=(pop_size,), minval=0, maxval=self.k)
         
-        best_fitness = state.best_fitness
+        best_individual = state.top_k_solutions[idx] # (pop_size, num_dims)
+        
+        # Use sampled top-k fitness for reward scaling
+        sampled_fitness = state.top_k_fitness[idx] # (pop_size,)
 
-        delta_from_best_individual = population - best_individual
+        delta_from_best_individual = population - best_individual # (pop_size, num_dims)
         state_vae_mu = state.noise_aux_mu
         state_vae_std = state.noise_aux_std
 
@@ -193,7 +196,8 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             state_vae_mu, state_vae_std, delta_from_best_individual
         )
         # reshape best fitness to popsize and scale by alpha
-        shaped_best_fitness = self.alpha * jnp.ones_like(fitness) * best_fitness
+        # sampled_fitness is already (pop_size,)
+        shaped_best_fitness = self.alpha * sampled_fitness
         aug_rewards = -shaped_best_fitness
         return aug_rewards, logprobs_for_noise_delta
 
@@ -219,12 +223,6 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             ),
             lambda st: st,
             state,
-        )
-
-        # Top-k update moved to tell() to use raw fitness
-        
-        state = state.replace(
-            # top_k updated in tell
         )
 
         # Compute grad
