@@ -10,6 +10,7 @@ from typing import Any
 import jax
 import jax.numpy as jnp
 import optax
+from evosax.algorithms.base import State
 from flax import struct
 
 from evosax.core.fitness_shaping import centered_rank_fitness_shaping_fn
@@ -33,7 +34,7 @@ class State(BaseState):
     noise_state: Any = None  # TrainState for DeepNoiseModel
     noise_aux_mu: jax.Array | None = None
     noise_aux_std: jax.Array | None = None
-    
+
     # Top-k buffer
     top_k_solutions: jax.Array | None = None
     top_k_fitness: jax.Array | None = None
@@ -55,7 +56,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             optimizer: optax.GradientTransformation = optax.sgd(learning_rate=1e-3),
             std_schedule: Callable = optax.constant_schedule(1.0),
             fitness_shaping_fn: Callable = centered_rank_fitness_shaping_fn,
-            metrics_fn: Callable = metrics_fn,
+            metrics_fn_: Callable = metrics_fn,
             lr_noise_model: float = 1e-4,
             hidden_dims: tuple = (128, 64),
             use_best_individual_augmentation: bool = False,
@@ -66,7 +67,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         """Initialize OpenAI-ES."""
         assert population_size % 2 == 0, "Population size must be even."
-        super().__init__(population_size, solution, fitness_shaping_fn, metrics_fn)
+        super().__init__(population_size, solution, fitness_shaping_fn, metrics_fn_)
 
         # Optimizer
         self.optimizer = optimizer
@@ -153,38 +154,38 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             fitness: Fitness,
             state: State,
             params: Params,
-    ) -> State:
+    ) -> tuple[State, Any]:
         # Update top-k buffer using RAW fitness
         # Concatenate current top-k with new population
         all_solutions = jnp.concatenate([state.top_k_solutions, population], axis=0)
         all_fitness = jnp.concatenate([state.top_k_fitness, fitness], axis=0)
-        
+
         # Find top-k indices (smallest fitness)
         # jax.lax.top_k returns largest values, so we negate fitness
         _, top_k_indices = jax.lax.top_k(-all_fitness, self.k)
-        
+
         new_top_k_solutions = all_solutions[top_k_indices]
         new_top_k_fitness = all_fitness[top_k_indices]
-        
+
         state = state.replace(
             top_k_solutions=new_top_k_solutions,
             top_k_fitness=new_top_k_fitness,
         )
-        
+
         return super().tell(key, population, fitness, state, params)
 
-    def add_best_individual_augmentation(self, key, state, population, fitness):
+    def add_best_individual_augmentation(self, key, state, population):
         # Sample from top-k
         # We sample one top-k individual for EACH individual in the population
         pop_size = population.shape[0]
         idx = jax.random.randint(key, shape=(pop_size,), minval=0, maxval=self.k)
-        
-        best_individual = state.top_k_solutions[idx] # (pop_size, num_dims)
-        
-        # Use sampled top-k fitness for reward scaling
-        sampled_fitness = state.top_k_fitness[idx] # (pop_size,)
 
-        delta_from_best_individual = population - best_individual # (pop_size, num_dims)
+        best_individual = state.top_k_solutions[idx]  # (pop_size, num_dims)
+
+        # Use sampled top-k fitness for reward scaling
+        sampled_fitness = state.top_k_fitness[idx]  # (pop_size,)
+
+        delta_from_best_individual = population - best_individual  # (pop_size, num_dims)
         state_vae_mu = state.noise_aux_mu
         state_vae_std = state.noise_aux_std
 
@@ -248,7 +249,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             )
         else:
             rng, key = jax.random.split(key)
-            aug_rewards, logprobs_for_noise_delta = self.add_best_individual_augmentation(rng, state, population, fitness)
+            aug_rewards, logprobs_for_noise_delta = self.add_best_individual_augmentation(rng, state, population)
             cat_rewards = jnp.concatenate([rewards, aug_rewards])
             cat_log_probs = jnp.concatenate([state.noise_log_prob, logprobs_for_noise_delta])
             new_noise_state, _ = self.deep_noise_model.update(
