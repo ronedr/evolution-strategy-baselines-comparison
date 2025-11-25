@@ -60,7 +60,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             lr_noise_model: float = 1e-4,
             hidden_dims: tuple = (128, 64),
             use_best_individual_augmentation: bool = False,
-            alpha=2,
+            alpha=0.1,
             normalize_fitness_score=False,
             k: int = 200,
     ):
