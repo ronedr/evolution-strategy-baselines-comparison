@@ -51,7 +51,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             self,
             population_size: int,
             solution: Solution,
-            use_antithetic_sampling: bool = True,
+            use_antithetic_sampling: bool = False,
             optimizer: optax.GradientTransformation = optax.sgd(learning_rate=1e-3),
             std_schedule: Callable = optax.constant_schedule(1.0),
             fitness_shaping_fn: Callable = centered_rank_fitness_shaping_fn,
@@ -175,7 +175,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
     def add_best_individual_augmentation(self, key, state, population, fitness):
         # Sample from top-k
-        idx = jax.random.randint(key, shape=(), minval=0, maxval=self.k)
+        best_ind_indexes = jax.random.randint(key, shape=(), minval=0, maxval=self.k)
         
         # If buffer isn't full (still has infs), we might sample an inf. 
         # However, since we fill it with pop_size > k in the first gen, 
@@ -183,7 +183,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         # But to be safe/correct if k > pop_size (though unlikely given defaults), we should handle it.
         # Given the user requirement "pop_size=1024, k=200", we are safe.
         
-        best_individual = state.top_k_solutions[idx]
+        best_individual = state.top_k_solutions[best_ind_indexes]
         
         # Use state.best_fitness (shaped) for reward scaling to match the scale of other rewards
         # top_k_fitness contains raw fitness, which might be on a different scale
