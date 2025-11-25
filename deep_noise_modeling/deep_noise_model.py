@@ -7,7 +7,7 @@ from flax.training.train_state import TrainState
 from vae_flax import VAEEncoder
 
 
-# from evosax.algorithms import EvoTF_ES
+from evosax.algorithms import EvoTF_ES, Open_ES
 
 def gaussian_log_prob(mu, std, x):
     var = std ** 2 + 1e-8
