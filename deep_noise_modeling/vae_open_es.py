@@ -52,7 +52,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             self,
             population_size: int,
             solution: Solution,
-            use_antithetic_sampling: bool = False,
+            use_antithetic_sampling: bool = True,
             optimizer: optax.GradientTransformation = optax.sgd(learning_rate=1e-3),
             std_schedule: Callable = optax.constant_schedule(1.0),
             fitness_shaping_fn: Callable = centered_rank_fitness_shaping_fn,
