@@ -12,7 +12,7 @@ from evosax.algorithms import Open_ES as ES
 fn_name = "sphere"  # <-- change this to: rastrigin, rosenbrock, bent_cigar, etc.
 bbob_fn = bbob_fns[fn_name]
 
-num_dims = 1500  # dimensionality of the challenge
+num_dims = 50  # dimensionality of the challenge
 POPULATION_SIZE = 1024
 num_generations = 1000
 

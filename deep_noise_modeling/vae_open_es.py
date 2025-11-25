@@ -73,6 +73,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         self.deep_noise_model = DeepNoiseModel(
             input_dim=self.num_dims,  # encoder input == num_dims
+            latent_dim=self.num_dims,
             hidden_dims=hidden_dims,
             lr=lr_noise_model,
         )
