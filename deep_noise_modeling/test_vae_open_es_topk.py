@@ -11,7 +11,7 @@ def test_top_k_augmentation():
     strategy = VAE_Open_ES(
         population_size=pop_size,
         solution=jnp.zeros(input_dim),
-        k=k,
+        top_k_ind_aug=k,
         use_best_individual_augmentation=True
     )
     

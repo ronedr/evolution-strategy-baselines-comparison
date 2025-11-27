@@ -57,17 +57,19 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             std_schedule: Callable = optax.constant_schedule(1.0),
             fitness_shaping_fn: Callable = centered_rank_fitness_shaping_fn,
             metrics_fn_: Callable = metrics_fn,
-            lr_noise_model: float = 1e-4,
-            hidden_dims: tuple = (128, 64),
+            noise_model_params=None,
             use_best_individual_augmentation: bool = False,
             alpha=0.1,
             normalize_fitness_score=False,
-            k: int = 200,
+            top_k_ind_aug: int = 200,
     ):
 
         """Initialize OpenAI-ES."""
         assert population_size % 2 == 0, "Population size must be even."
         super().__init__(population_size, solution, fitness_shaping_fn, metrics_fn_)
+
+        if noise_model_params is None:
+            noise_model_params = {}
 
         # Optimizer
         self.optimizer = optimizer
@@ -79,16 +81,15 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         self.use_antithetic_sampling = use_antithetic_sampling
 
         self.deep_noise_model = DeepNoiseModel(
-            input_dim=self.num_dims,  # encoder input == num_dims
+            input_dim=self.num_dims,
             latent_dim=self.num_dims,
-            hidden_dims=hidden_dims,
-            lr=lr_noise_model,
+            **noise_model_params,
         )
 
         self.use_best_individual_augmentation = use_best_individual_augmentation
         self.alpha = alpha
         self.normalize_fitness_score = normalize_fitness_score
-        self.k = k
+        self.top_k_ind_aug = top_k_ind_aug
 
     @property
     def _default_params(self) -> Params:
@@ -108,8 +109,8 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             noise_state=noise_state,
 
             noise_log_prob=None,
-            top_k_solutions=jnp.zeros((self.k, self.num_dims)),
-            top_k_fitness=jnp.full((self.k,), jnp.inf),
+            top_k_solutions=jnp.zeros((self.top_k_ind_aug, self.num_dims)),
+            top_k_fitness=jnp.full((self.top_k_ind_aug,), jnp.inf),
         )
         return state
 
@@ -162,7 +163,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         # Find top-k indices (smallest fitness)
         # jax.lax.top_k returns largest values, so we negate fitness
-        _, top_k_indices = jax.lax.top_k(-all_fitness, self.k)
+        _, top_k_indices = jax.lax.top_k(-all_fitness, self.top_k_ind_aug)
 
         new_top_k_solutions = all_solutions[top_k_indices]
         new_top_k_fitness = all_fitness[top_k_indices]
@@ -178,7 +179,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         # Sample from top-k
         # We sample one top-k individual for EACH individual in the population
         pop_size = population.shape[0]
-        idx = jax.random.randint(key, shape=(pop_size,), minval=0, maxval=self.k)
+        idx = jax.random.randint(key, shape=(pop_size,), minval=0, maxval=self.top_k_ind_aug)
 
         best_individual = state.top_k_solutions[idx]  # (pop_size, num_dims)
 

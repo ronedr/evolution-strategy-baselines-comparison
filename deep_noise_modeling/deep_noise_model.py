@@ -5,9 +5,9 @@ import jax.numpy as jnp
 import optax
 from flax.training.train_state import TrainState
 from vae_flax import VAEEncoder
-
-
+from srht_random_projection import SRHT_Projection_Padded
 from evosax.algorithms import EvoTF_ES, Open_ES
+
 
 def gaussian_log_prob(mu, std, x):
     var = std ** 2 + 1e-8
@@ -21,12 +21,21 @@ class DeepNoiseModel:
             latent_dim,
             hidden_dims=(128, 64),
             lr=1e-4,
+            use_random_projection=False,
+            random_projection_dim=None,
     ):
+        if use_random_projection:
+            assert random_projection_dim is not None, "random_projection_dim must be specified"
+
         self.input_dim = input_dim
         self.hidden_dims = hidden_dims
         self.lr = lr
+        self.use_random_projection = use_random_projection
+        self.random_projection_dim = random_projection_dim
+        self.projection = SRHT_Projection_Padded(input_dim=input_dim,
+                                                 output_dim=random_projection_dim) if use_random_projection else None
         self.encoder = VAEEncoder(
-            input_dim=input_dim,
+            input_dim=input_dim if not use_random_projection else random_projection_dim,
             latent_dim=latent_dim,
             hidden_dims=hidden_dims,
         )

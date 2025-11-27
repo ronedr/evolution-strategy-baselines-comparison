@@ -16,6 +16,7 @@ num_dims = 50  # dimensionality of the challenge
 POPULATION_SIZE = 1024
 num_generations = 1000
 
+
 # -------------------------
 # 2. BBOB function wrapper
 # -------------------------
