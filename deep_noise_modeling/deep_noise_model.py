@@ -46,7 +46,7 @@ class DeepNoiseModel:
     @functools.partial(jax.jit, static_argnames=("self",))
     def init(self, rng):
         """Returns TrainState, with no Python-side mutation."""
-        dummy = jnp.zeros((1, self.input_dim))
+        dummy = jnp.zeros((1, self.input_dim if not self.use_random_projection else self.random_projection_dim))
         variables = self.encoder.init(rng, dummy)
         return TrainState.create(
             apply_fn=self.encoder.apply,
