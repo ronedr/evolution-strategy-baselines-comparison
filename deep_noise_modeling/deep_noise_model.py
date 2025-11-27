@@ -5,7 +5,7 @@ import jax.numpy as jnp
 import optax
 from flax.training.train_state import TrainState
 
-from deep_noise_modeling.vae_unet import VAEUNetEncoder
+from vae_unet import VAEUNetEncoder
 from vae_flax import VAEEncoder
 from srht_random_projection import SRHT_Projection_Padded
 from evosax.algorithms import EvoTF_ES, Open_ES
