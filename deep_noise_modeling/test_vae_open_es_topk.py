@@ -1,6 +1,6 @@
 import jax
 import jax.numpy as jnp
-from deep_noise_modeling.vae_open_es import VAE_Open_ES
+from vae_open_es import VAE_Open_ES
 
 def test_top_k_augmentation():
     input_dim = 10
