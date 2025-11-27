@@ -4,6 +4,8 @@ import jax
 import jax.numpy as jnp
 import optax
 from flax.training.train_state import TrainState
+
+from deep_noise_modeling.vae_unet import VAEUNetEncoder
 from vae_flax import VAEEncoder
 from srht_random_projection import SRHT_Projection_Padded
 from evosax.algorithms import EvoTF_ES, Open_ES
@@ -35,11 +37,14 @@ class DeepNoiseModel:
         self.projection = SRHT_Projection_Padded(input_dim=input_dim,
                                                  output_dim=random_projection_dim) if use_random_projection else None
         self.proj_params = None
-        self.encoder = VAEEncoder(
-            input_dim=input_dim if not use_random_projection else random_projection_dim,
-            latent_dim=latent_dim,
-            hidden_dims=hidden_dims,
-        )
+        # self.encoder = VAEEncoder(
+        #     input_dim=input_dim if not use_random_projection else random_projection_dim,
+        #     latent_dim=latent_dim,
+        #     hidden_dims=hidden_dims,
+        # )
+
+        self.encoder = VAEUNetEncoder(input_dim=input_dim if not use_random_projection else random_projection_dim,
+                                      latent_dim=latent_dim)
 
         self.tx = optax.adam(lr)
 
