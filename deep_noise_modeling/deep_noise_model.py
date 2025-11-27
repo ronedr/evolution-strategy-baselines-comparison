@@ -37,14 +37,11 @@ class DeepNoiseModel:
         self.projection = SRHT_Projection_Padded(input_dim=input_dim,
                                                  output_dim=random_projection_dim) if use_random_projection else None
         self.proj_params = None
-        # self.encoder = VAEEncoder(
-        #     input_dim=input_dim if not use_random_projection else random_projection_dim,
-        #     latent_dim=latent_dim,
-        #     hidden_dims=hidden_dims,
-        # )
-
-        self.encoder = VAEUNetEncoder(input_dim=input_dim if not use_random_projection else random_projection_dim,
-                                      latent_dim=latent_dim)
+        self.encoder = VAEEncoder(
+            input_dim=input_dim if not use_random_projection else random_projection_dim,
+            latent_dim=latent_dim,
+            hidden_dims=hidden_dims,
+        )
 
         self.tx = optax.adam(lr)
 
