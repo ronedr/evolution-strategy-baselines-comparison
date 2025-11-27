@@ -34,6 +34,7 @@ class DeepNoiseModel:
         self.random_projection_dim = random_projection_dim
         self.projection = SRHT_Projection_Padded(input_dim=input_dim,
                                                  output_dim=random_projection_dim) if use_random_projection else None
+        self.proj_params = None
         self.encoder = VAEEncoder(
             input_dim=input_dim if not use_random_projection else random_projection_dim,
             latent_dim=latent_dim,
@@ -60,6 +61,12 @@ class DeepNoiseModel:
         features: (batch, input_dim)
         shape: (popsize, num_dims)
         """
+        if self.proj_params is None:
+            self.proj_params = self.projection.init(rng, features)
+
+        if self.use_random_projection:
+            features = self.projection.apply(self.proj_params, features)
+
         mu, std, _ = noise_state.apply_fn({"params": noise_state.params}, features)
 
         mu = jnp.broadcast_to(mu, shape)
