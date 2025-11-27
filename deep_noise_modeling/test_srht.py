@@ -18,13 +18,15 @@ def test_srht():
     params = proj.init(key, x)
     print("Applying...")
     y = proj.apply(params, x)
+    y2 = proj.apply(params, x)
 
     print("Input shape:", x.shape)  # (8, 500000)
     print("Output shape:", y.shape)  # (8, 4096)
     
-    # Verify shapes
+    # Verify shapes and features
     assert x.shape == (BATCH_SIZE, input_dim)
     assert y.shape == (BATCH_SIZE, output_dim)
+    assert jnp.all(y == y2)
     print("Test passed!")
 
 if __name__ == "__main__":
