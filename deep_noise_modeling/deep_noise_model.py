@@ -61,7 +61,7 @@ class DeepNoiseModel:
         features: (batch, input_dim)
         shape: (popsize, num_dims)
         """
-        if self.proj_params is None:
+        if self.proj_params is None and self.use_random_projection:
             self.proj_params = self.projection.init(rng, features)
 
         if self.use_random_projection:
