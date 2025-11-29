@@ -6,8 +6,8 @@ import optax
 from flax.training.train_state import TrainState
 
 from vae_flax import VAEEncoder
-# from projections.srht_random_projection import SRHT_Projection_Padded as random_projection
-from projections.count_sketch_projection import CountSketch_Projection as random_projection
+from projections.srht_random_projection import SRHT_Projection_Padded as random_projection
+# from projections.count_sketch_projection import CountSketch_Projection as random_projection
 
 
 def gaussian_log_prob(mu, std, x):
