@@ -6,7 +6,7 @@ import optax
 from flax.training.train_state import TrainState
 
 from vae_flax import VAEEncoder
-from projections.srht_random_projection import SRHT_Projection_Padded as random_projection
+# from projections.srht_random_projection import SRHT_Projection_Padded
 # from projections.count_sketch_projection import CountSketch_Projection as random_projection
 
 
@@ -22,9 +22,10 @@ class DeepNoiseModel:
             latent_dim,
             hidden_dims=(128, 64),
             lr=1e-4,
-            use_random_projection=False,
+            random_projection=None,
             random_projection_dim=None,
     ):
+        use_random_projection = random_projection is not None
         if use_random_projection:
             assert random_projection_dim is not None, "random_projection_dim must be specified"
 
