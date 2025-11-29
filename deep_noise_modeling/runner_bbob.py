@@ -3,8 +3,8 @@ import jax.numpy as jnp
 import optax
 
 from evosax.problems.bbob.bbob_fns import bbob_fns
-# from vae_open_es import VAE_Open_ES as ES
-from evosax.algorithms import Open_ES as ES
+from vae_open_es import VAE_Open_ES as ES
+# from evosax.algorithms import Open_ES as ES
 
 # -------------------------
 # 1. Choose BBOB function
