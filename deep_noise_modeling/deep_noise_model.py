@@ -6,7 +6,8 @@ import optax
 from flax.training.train_state import TrainState
 
 from vae_flax import VAEEncoder
-from deep_noise_modeling.projections.srht_random_projection import SRHT_Projection_Padded
+# from deep_noise_modeling.projections.srht_random_projection import SRHT_Projection_Padded as random_projection
+from deep_noise_modeling.projections.count_sketch_projection import CountSketch_Projection as random_projection
 
 
 def gaussian_log_prob(mu, std, x):
@@ -32,8 +33,8 @@ class DeepNoiseModel:
         self.lr = lr
         self.use_random_projection = use_random_projection
         self.random_projection_dim = random_projection_dim
-        self.projection = SRHT_Projection_Padded(input_dim=input_dim,
-                                                 output_dim=random_projection_dim) if use_random_projection else None
+        self.projection = random_projection(input_dim=input_dim,
+                                            output_dim=random_projection_dim) if use_random_projection else None
         self.proj_params = None
         self.encoder = VAEEncoder(
             input_dim=input_dim if not use_random_projection else random_projection_dim,
