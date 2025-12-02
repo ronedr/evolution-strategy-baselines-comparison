@@ -3,15 +3,9 @@ import functools
 import jax
 import jax.numpy as jnp
 import optax
-from typing import Any
 from flax.training.train_state import TrainState
-from flax import struct
 
 from vae_flax import VAEEncoder
-
-
-# from projections.srht_random_projection import SRHT_Projection_Padded
-# from projections.count_sketch_projection import CountSketch_Projection as random_projection
 
 
 def gaussian_log_prob(mu, std, x):
@@ -60,7 +54,7 @@ class DeepNoiseModel:
         """Returns TrainState, with no Python-side mutation."""
         dummy = jnp.zeros((1, self.input_dim if not self.use_random_projection else self.random_projection_dim))
         variables = self.encoder.init(rng, dummy)
-        
+
         proj_params = None
         if self.use_random_projection:
             dummy_proj = jnp.zeros((1, self.input_dim))
