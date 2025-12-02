@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Brax visualizer</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  </head>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #brax-viewer {
+      height: 480px;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+  <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/",
+        "lilgui": "https://cdn.jsdelivr.net/npm/lil-gui@0.18.0/+esm",
+        "viewer": "https://cdn.jsdelivr.net/gh/google/brax@v0.12.4/brax/visualizer/js/viewer.js"
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/pako@2.1.0/dist/pako.min.js"></script>
+
+  <script type="application/javascript">
+  var system = "eJzt1k2PHVVigOG/grwGVN8f2Y2yyyaRkkUkhCKPxgZrwEbYUSZB/PfU7W7sbsNMnE14Iz1Garfruafq1HlPFfenZ29+ePfs7z776dm7V9+/ePvuxQ/XP4Yvh+W8+7MP47lv+759/tmz18+/f3Hhs3/84d2rN6//4Q//+uzn6+h3r17/+d9u9Payr569e/Pj2zfPruN/fPftq2++vfvt7bevXt/98vLNm3e3X16+t5e/2Ms7+/rRZf75P6/ZfH+zb168+f7t3Rz/482P3/3pdp2f3n/sn757/vrFs18m8upPf7kOfjFe//7hzd2Mrnv5/LNfftzO/+Ob2/1+NT4+/gG/+ePz+1HL7dg8335O192P9/721X/drvrVcjfow8+vf77p/c0/md7fP//h7b9/9/EEh/95fsOX+7CPw7Zv53As5zwsDx/74q/IR9Mf7v+s5zYs27Le383doXEex3mYxuPu4LTel74+NU/rdiy/utfbbtgeTnecy7Cd+23gen/Vaw/8r+724UzTfCzXDPbz/c2PD5cYl3MYx22cnizGOWzHPlw3PY7neh7L+2HLNC7jsIzjdafTeUy/y1qM65MrLMfD2nz94UH4hF3xZNf+ajk+5B+n+2mu0zxu07E8XqmL52mejnPd5/G8buiazd2g+6HndWd3U5/XczrmB/o/X67l/vWyHtP1clmO/fFy3b0RPmG1pg+rdVuT35r1/T0P+wNd2+Pad9PTjbVeUxivqezntSWPc3q0WNfDtRzDup3zNm3L8Hst1t/aW3dvzU9YrPnJC+dh/5zzdC7Lvi/bo8U671drOrZxmKZzffoUnsO1G+f1+tQ6zNv2aLHGeVnPYR6vXXWs6zIfv89qDed8N3Dbj2tG5/h4tV5+8pO4PNlbv9pAjx7F8eH/k/O479finE+Xa9vm49pby23VxkcvrWndh2tnrcv1zhrX3+ul9dHpzsdL9alP4fpkY233z/X1RK3HeL2ZH++r++vP675N+7F9tFDrOs/bOl4TWcdrQo/21bUF1+ma3TZN27rffRP5XZ7C4X7kcb2urtM9PDIPi/WpT+H2ZLGW+wd73I9rq57z8qlvrP5i/fYDcy3W7Qvj23fP3724/zr3l/tFe1iSr67Vu/su+Oiv62KVw48a/Jb/7dFtffy1+19+fP767cs3P37/7O6bnTbaaKPN/zvVpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrmrTVW26qk1XtemqNl3VpqvadFWbrn5Cmy+GL4dt24dpXPdpPc5jX+bPP7sO3n5s8zTN53RM4zyO5zreLncNWLdt3s59vw7t87mvHz4/LsM4Tcs4b/M6rcvD5+fzHMdlHod9GZdpWbf3A+btOIbtXI/xPNZln7eHEdtxHboucKzDeqzn8n7AdDvNcv23TdM+juNxGzB8uczTua3LsV/X3pdHE1qHZbvdxXVjx7bs95++TjEt+3qd5pr+fLz/9DX58di2ZR3m4bqtefnl5Ns4D/s2jcO1TOf+YTLjMR3zMVxTGY7jWqcne2n48jzPY56PaZquM27b9DDwtuTXyHkYzvW6v31crknf2f31bsPO6br7abmmeI6Phy3bcu7nNp3nlWDelqfDtmM8zmEYh+uyH6Y5TOs0DbdLndt1sWF6Oui62rWUy7bOw7g+utY1x2WZ932/pn/12z6e47xv+z4f83Kt7uNxV/nzXOf1WK7e5/7RFM953ZdtPKdznsYPUxzHebmW6rhuYBqu254/uta5XwtyzNMwj4+XcV728XayK/E5zut5P+qvbPuvf/75vwE2p9Kt";
+  // decode base64 (convert ascii to binary)
+  system = atob(system);
+  // convert binary string to character-number array
+  system = system.split('').map(function(x){return x.charCodeAt(0);});
+  // decompress
+  system = pako.inflate(system);
+  // convert gunzipped byteArray back to ascii string
+  system = new TextDecoder("utf-8").decode(system);
+  // and load json
+  system = JSON.parse(system);
+  </script>
+
+  <body>
+
+    <div id="brax-viewer"></div>
+
+    <script type="module">
+      import {Viewer} from 'viewer';
+      const domElement = document.getElementById("brax-viewer");
+      var viewer = new Viewer(domElement, system);
+    </script>
+
+  </body>
+
+</html>

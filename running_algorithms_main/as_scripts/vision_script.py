@@ -28,17 +28,18 @@ std_schedule = optax.exponential_decay(
 )
 
 es_dict = {
-    "Sep_CMA_ES": {},
+    "PGPE": {
+        "optimizer": optax.adam(learning_rate=0.02),
+    },
     "Open_ES": {    
-        "optimizer":optax.adam(learning_rate=lr_schedule),
-        "std_schedule": std_schedule,
+        "optimizer": optax.adam(learning_rate=lr_schedule), 
+        "std_schedule": std_schedule
     },
     "SNES": {},
-    "PGPE": {
-        "optimizer": optax.adam(learning_rate=0.02)
-    },
-    "LES": {},
+    "Sep_CMA_ES": {},
+    # "CMA_ES": {},
     "DES": {},
+    "LES": {},
 }
 
 import argparse
@@ -75,6 +76,7 @@ for task_name in tqdm(problems_torch_vision, desc="Loading Problems .."):
             log_period=log_period,
             eval_batch_size=None,
             run_again_if_exist=False,
+            suffix_experiment_name=f"{population_size}",
             seeds=seeds
         )
     except Exception as e:

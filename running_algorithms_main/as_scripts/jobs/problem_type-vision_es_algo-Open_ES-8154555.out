@@ -1,0 +1,49 @@
+Thu 13 Nov 2025 20:22:00 IST
+
+SLURM_JOBID:		 8154555
+SLURM_JOB_NODELIST:	 cs-pheno-11 
+
+configuration parmas running: problem_type=vision es_algorithms=Open_ES
+Successfully loaded: MNIST
+Loading Problems ..:   0%|                                                                                            | 0/4 [00:00<?, ?it/s]
+there is experiment results. [../../results/TorchVisionProblem/MNIST/Open_ES/0]
+there is experiment results. [../../results/TorchVisionProblem/MNIST/Open_ES/1]
+there is experiment results. [../../results/TorchVisionProblem/MNIST/Open_ES/2]
+there is experiment results. [../../results/TorchVisionProblem/MNIST/Open_ES/3]
+there is experiment results. [../../results/TorchVisionProblem/MNIST/Open_ES/4]
+Running ES algorithms:   0%|                                                                                          | 0/1 [00:00<?, ?it/s][A
+Running ES algorithms: 100%|██████████████████████████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.09s/it][ARunning ES algorithms: 100%|██████████████████████████████████████████████████████████████████████████████████| 1/1 [00:01<00:00,  1.09s/it]
+Successfully loaded: FashionMNIST
+Loading Problems ..:  25%|█████████████████████                                                               | 1/4 [00:21<01:04, 21.54s/it]
+there is experiment results. [../../results/TorchVisionProblem/FashionMNIST/Open_ES/0]
+there is experiment results. [../../results/TorchVisionProblem/FashionMNIST/Open_ES/1]
+there is experiment results. [../../results/TorchVisionProblem/FashionMNIST/Open_ES/2]
+there is experiment results. [../../results/TorchVisionProblem/FashionMNIST/Open_ES/3]
+there is experiment results. [../../results/TorchVisionProblem/FashionMNIST/Open_ES/4]
+Running ES algorithms:   0%|                                                                                          | 0/1 [00:00<?, ?it/s][A
+Running ES algorithms: 100%|██████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.54it/s][ARunning ES algorithms: 100%|██████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.54it/s]
+Successfully loaded: CIFAR10
+Loading Problems ..:  50%|██████████████████████████████████████████                                          | 2/4 [00:35<00:34, 17.24s/it]
+running the experiment ... [../../results/TorchVisionProblem/CIFAR10/Open_ES/0]
+Running ES algorithms:   0%|                                                                                          | 0/1 [00:00<?, ?it/s][A2025-11-13 20:23:12.461900: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 8.02GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+UNKNOWN: Failed to determine best cudnn convolution algorithm for:
+%cudnn-conv.3 = (f32[1024,2048,32,32]{3,2,1,0}, u8[0]{0}) custom-call(f32[1024,3,32,32]{3,2,1,0} %bitcast.16386, f32[2048,3,5,5]{3,2,1,0} %bitcast.16960), window={size=5x5 pad=2_2x2_2}, dim_labels=bf01_oi01->bf01, custom_call_target="__cudnn$convForward", metadata={op_name="jit(scan_step)/jit(main)/while/body/jit(eval)/vmap(CNN)/Conv_0/conv_general_dilated" source_file="/home/ronedr/evolution-strategy-baselines-comparison/experiment/utils/es_utils.py" source_line=74}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false}
+
+Original error: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 8606711808 bytes. [tf-allocator-allocation-error='']
+
+To ignore this failure and try to use a fallback algorithm (which may have suboptimal performance), use XLA_FLAGS=--xla_gpu_strict_conv_algorithm_picker=false.  Please also file a bug for the root cause of failing autotuning. Open_ES TorchVisionProblem/CIFAR10
+
+Running ES algorithms: 100%|██████████████████████████████████████████████████████████████████████████████████| 1/1 [00:13<00:00, 13.36s/it][ARunning ES algorithms: 100%|██████████████████████████████████████████████████████████████████████████████████| 1/1 [00:13<00:00, 13.36s/it]
+Successfully loaded: SVHN
+Loading Problems ..:  75%|███████████████████████████████████████████████████████████████                     | 3/4 [01:04<00:22, 22.66s/it]
+running the experiment ... [../../results/TorchVisionProblem/SVHN/Open_ES/0]
+Running ES algorithms:   0%|                                                                                          | 0/1 [00:00<?, ?it/s][A2025-11-13 20:23:52.926745: W external/xla/xla/tsl/framework/bfc_allocator.cc:310] Allocator (GPU_0_bfc) ran out of memory trying to allocate 8.02GiB with freed_by_count=0. The caller indicates that this is not a failure, but this may mean that there could be performance gains if more memory were available.
+UNKNOWN: Failed to determine best cudnn convolution algorithm for:
+%cudnn-conv.3 = (f32[1024,2048,32,32]{3,2,1,0}, u8[0]{0}) custom-call(f32[1024,3,32,32]{3,2,1,0} %bitcast.16278, f32[2048,3,5,5]{3,2,1,0} %bitcast.16852), window={size=5x5 pad=2_2x2_2}, dim_labels=bf01_oi01->bf01, custom_call_target="__cudnn$convForward", metadata={op_name="jit(scan_step)/jit(main)/while/body/jit(eval)/vmap(CNN)/Conv_0/conv_general_dilated" source_file="/home/ronedr/evolution-strategy-baselines-comparison/experiment/utils/es_utils.py" source_line=74}, backend_config={"operation_queue_id":"0","wait_on_operation_queues":[],"cudnn_conv_backend_config":{"conv_result_scale":1,"activation_mode":"kNone","side_input_scale":0,"leakyrelu_alpha":0},"force_earliest_schedule":false}
+
+Original error: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 8606711808 bytes. [tf-allocator-allocation-error='']
+
+To ignore this failure and try to use a fallback algorithm (which may have suboptimal performance), use XLA_FLAGS=--xla_gpu_strict_conv_algorithm_picker=false.  Please also file a bug for the root cause of failing autotuning. Open_ES TorchVisionProblem/SVHN
+
+Running ES algorithms: 100%|██████████████████████████████████████████████████████████████████████████████████| 1/1 [00:19<00:00, 19.98s/it][ARunning ES algorithms: 100%|██████████████████████████████████████████████████████████████████████████████████| 1/1 [00:19<00:00, 19.98s/it]
+Loading Problems ..: 100%|████████████████████████████████████████████████████████████████████████████████████| 4/4 [01:45<00:00, 29.78s/it]Loading Problems ..: 100%|████████████████████████████████████████████████████████████████████████████████████| 4/4 [01:45<00:00, 26.39s/it]

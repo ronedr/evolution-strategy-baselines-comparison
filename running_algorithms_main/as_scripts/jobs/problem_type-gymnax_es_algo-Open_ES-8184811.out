@@ -1,0 +1,46 @@
+Sat 15 Nov 2025 22:54:59 IST
+
+SLURM_JOBID:		 8184811
+SLURM_JOB_NODELIST:	 dt-3090-01 
+
+configuration parmas running: problem_type=gymnax es_algorithms=Open_ES
+Loading Problems ..:   0%|                                                                                                                                             | 0/4 [00:00<?, ?it/s]/home/ronedr/.conda/envs/ronedr_es_env/lib/python3.10/site-packages/jax/_src/ops/scatter.py:93: FutureWarning: scatter inputs have incompatible types: cannot safely cast value from dtype=int32 to dtype=bool with jax_numpy_dtype_promotion='standard'. In future JAX releases this will result in an error.
+  warnings.warn(
+Successfully loaded: Asterix-MinAtar
+
+running the experiment ... [../../results/GymnaxProblem/Asterix-MinAtar/Open_ES/0]
+Generation 010 | Best fitness (Train): 6.00 | Best fitness in generation (Train): 6.00 | Mean fitness (Train): 0.77 | Mean fitness (Test): 1.00
+Generation 020 | Best fitness (Train): 6.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 0.57 | Mean fitness (Test): 0.00
+Generation 030 | Best fitness (Train): 6.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 0.18 | Mean fitness (Test): 0.00
+Generation 040 | Best fitness (Train): 6.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.59 | Mean fitness (Test): 3.00
+Generation 050 | Best fitness (Train): 7.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.26 | Mean fitness (Test): 0.00
+Generation 060 | Best fitness (Train): 7.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 0.34 | Mean fitness (Test): 0.00
+Generation 070 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 0.52 | Mean fitness (Test): 0.00
+Generation 080 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.79 | Mean fitness (Test): 1.00
+Generation 090 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 2.00 | Mean fitness (Train): 0.34 | Mean fitness (Test): 0.00
+Generation 100 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 2.00 | Mean fitness (Train): 0.27 | Mean fitness (Test): 0.00
+Generation 110 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 3.00 | Mean fitness (Train): 0.10 | Mean fitness (Test): 0.00
+Generation 120 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 3.00 | Mean fitness (Train): 0.28 | Mean fitness (Test): 0.00
+Generation 130 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.29 | Mean fitness (Test): 0.00
+Generation 140 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.69 | Mean fitness (Test): 0.00
+Generation 150 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 3.00 | Mean fitness (Train): 0.52 | Mean fitness (Test): 1.00
+Generation 160 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 6.00 | Mean fitness (Train): 1.34 | Mean fitness (Test): 1.00
+Generation 170 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 1.32 | Mean fitness (Test): 3.00
+Generation 180 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.86 | Mean fitness (Test): 0.00
+Generation 190 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 1.12 | Mean fitness (Test): 4.00
+Generation 200 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.05 | Mean fitness (Test): 0.00
+Generation 210 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 0.55 | Mean fitness (Test): 0.00
+Generation 220 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 3.00 | Mean fitness (Train): 0.47 | Mean fitness (Test): 2.00
+Generation 230 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.86 | Mean fitness (Test): 0.00
+Generation 240 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 1.23 | Mean fitness (Test): 3.00
+Generation 250 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.57 | Mean fitness (Test): 0.00
+Generation 260 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.73 | Mean fitness (Test): 0.00
+Generation 270 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 0.99 | Mean fitness (Test): 1.00
+Generation 280 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 0.73 | Mean fitness (Test): 5.00
+Generation 290 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 4.00 | Mean fitness (Train): 0.23 | Mean fitness (Test): 0.00
+Generation 300 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 3.00 | Mean fitness (Train): 0.65 | Mean fitness (Test): 4.00
+Generation 310 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 7.00 | Mean fitness (Train): 0.38 | Mean fitness (Test): 0.00
+Generation 320 | Best fitness (Train): 8.00 | Best fitness in generation (Train): 5.00 | Mean fitness (Train): 0.56 | Mean fitness (Test): 0.00
+srun: Job step aborted: Waiting up to 302 seconds for job step to finish.
+[2025-11-15T22:57:37.499] error: *** JOB 8184811 ON dt-3090-01 CANCELLED AT 2025-11-15T22:57:37 DUE to SIGNAL Terminated ***
+Running ES algorithms:   0%|                                                                                                                                           | 0/1 [00:00<?, ?it/s][A[2025-11-15T22:57:37.499] error: *** STEP 8184811.0 ON dt-3090-01 CANCELLED AT 2025-11-15T22:57:37 DUE to SIGNAL Terminated ***
