@@ -1,6 +1,7 @@
 import jax.numpy as jnp
 from flax import linen as nn
-from srht_random_projection import SRHT_Projection_Padded
+
+from deep_noise_modeling.projections.srht_random_projection import SRHT_Projection_Padded
 
 
 class RandomProjectionSRHT(nn.Module):
