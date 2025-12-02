@@ -3,7 +3,10 @@ import jax.numpy as jnp
 import optax
 
 from evosax.problems.bbob.bbob_fns import bbob_fns
+
+from deep_noise_modeling.projections.stacked_srht import RandomProjectionSRHT
 from vae_open_es import VAE_Open_ES as ES
+
 # from evosax.algorithms import Open_ES as ES
 
 # -------------------------
@@ -12,9 +15,20 @@ from vae_open_es import VAE_Open_ES as ES
 fn_name = "sphere"  # <-- change this to: rastrigin, rosenbrock, bent_cigar, etc.
 bbob_fn = bbob_fns[fn_name]
 
-num_dims = 10  # dimensionality of the challenge
+num_dims = 16  # dimensionality of the challenge
 POPULATION_SIZE = 6
 num_generations = 100
+noise_model_params = {
+    'lr': 1e-4,
+    'hidden_dims': (512, 512, 512),
+    'random_projection': RandomProjectionSRHT,
+    'random_projection_dim': 16,
+    'vae_params': {
+        'use_dropout': False,
+        'use_layernorm': False,
+        'dropout_rate': 0.0
+    }
+}
 
 
 # -------------------------
@@ -72,6 +86,7 @@ es = ES(
     optimizer=optax.adam(learning_rate=lr_schedule),
     std_schedule=std_schedule,
     use_best_individual_augmentation=True,
+    noise_model_params=noise_model_params
 )
 
 params = es.default_params
