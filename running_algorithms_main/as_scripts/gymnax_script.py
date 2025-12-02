@@ -19,17 +19,34 @@ seeds = list(range(0, 5))
 result_dir = "../../results"
 problems_gymnax = ['Asterix-MinAtar', 'Breakout-MinAtar', 'Freeway-MinAtar', 'SpaceInvaders-MinAtar']
 
+
+
+lr_schedule = optax.exponential_decay(
+    init_value=0.01,
+    transition_steps=num_generations,
+    decay_rate=0.1,
+)
+
+std_schedule = optax.exponential_decay(
+    init_value=0.05,
+    transition_steps=num_generations,
+    decay_rate=0.2,
+)
+
 # algorithms
 es_dict = {
-    "PGPE": {"optimizer": optax.adam(learning_rate=0.02)},
-    "LES": {},
-    "Open_ES": {
-        "optimizer": optax.adam(learning_rate=0.05)
+    "PGPE": {
+        "optimizer": optax.adam(learning_rate=0.02),
+    },
+    "Open_ES": {    
+        "optimizer": optax.adam(learning_rate=lr_schedule), 
+        "std_schedule": std_schedule
     },
     "SNES": {},
     "Sep_CMA_ES": {},
-    "CMA_ES": {},
+    # "CMA_ES": {},
     "DES": {},
+    "LES": {},
 }
 
 # === args ===
@@ -69,6 +86,7 @@ for env_name in tqdm(problems_gymnax, desc="Loading Problems .."):
             log_period=log_period,
             eval_batch_size=eval_batch_size,
             run_again_if_exist=False,
+            suffix_experiment_name=f"{population_size}",
             seeds=seeds
         )
     except Exception as e:

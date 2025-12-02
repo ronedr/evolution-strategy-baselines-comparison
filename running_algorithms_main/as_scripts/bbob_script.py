@@ -6,22 +6,34 @@ from tqdm import tqdm
 from evosax.problems import BBOBProblem as Problem, bbob_fns
 from experiment.run_experiments import run_experiment_permutations
 
-num_generations = 1024
-population_size = 256
+num_generations = 4000
+population_size = 500
 eval_batch_size = 256
 log_period = 100
-num_dims = 10
+num_dims = 10000
 seeds = list(range(0, 5))
 result_dir = "../../results"
 problems_bbob_fns = list(bbob_fns.keys())
+
+lr_schedule = optax.exponential_decay(
+    init_value=0.01,
+    transition_steps=num_generations,
+    decay_rate=0.1,
+)
+std_schedule = optax.exponential_decay(
+    init_value=0.05,
+    transition_steps=num_generations,
+    decay_rate=0.2,
+)
 
 # all algorithms that we want to comapre with best params according the article "DISCOVERING EVOLUTION STRATEGIES VIA META-BLACK-BOX OPTIMIZATION".
 es_dict = {
     "PGPE": {
         "optimizer": optax.adam(learning_rate=0.02),
     },
-    "Open_ES": {
-        "optimizer": optax.adam(learning_rate=0.05)
+    "Open_ES": {    
+        "optimizer": optax.adam(learning_rate=lr_schedule), 
+        "std_schedule": std_schedule
     },
     "SNES": {},
     "Sep_CMA_ES": {},
@@ -49,10 +61,11 @@ for bbob_fn in tqdm(problems_bbob_fns, desc="Loading Problems .."):
                                     es_dict=running_es,
                                     num_generations=num_generations,
                                     population_size=population_size,
-                                    result_dir=result_dir,
+                                    result_dir=result_dir, 
+                                    run_again_if_exist=True,
                                     log_period=log_period,
                                     eval_batch_size=eval_batch_size,
-                                    run_again_if_exist=False,
+                                    suffix_experiment_name=f"{population_size}_{num_dims}",
                                     seeds=list(range(0, 5)))
     except Exception as e:
         print("Failed to load:", bbob_fn, e)
