@@ -196,7 +196,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         return super().tell(key, population, fitness, state, params)
 
-    def add_best_individual_augmentation(self, key, state, population, recalculate_mu_std=True):
+    def add_best_individual_augmentation(self, key, state, population, recalculate_mu_std=False):
         # Sample from top-k
         # We sample one top-k individual for EACH individual in the population
         pop_size = population.shape[0]
