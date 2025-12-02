@@ -3,7 +3,10 @@ import jax.numpy as jnp
 import optax
 
 from evosax.problems.bbob.bbob_fns import bbob_fns
+
+from deep_noise_modeling.projections.stacked_srht import RandomProjectionSRHT
 from vae_open_es import VAE_Open_ES as ES
+
 # from evosax.algorithms import Open_ES as ES
 
 # -------------------------
@@ -12,9 +15,20 @@ from vae_open_es import VAE_Open_ES as ES
 fn_name = "sphere"  # <-- change this to: rastrigin, rosenbrock, bent_cigar, etc.
 bbob_fn = bbob_fns[fn_name]
 
-num_dims = 10  # dimensionality of the challenge
+num_dims = 100  # dimensionality of the challenge
 POPULATION_SIZE = 6
 num_generations = 100
+noise_model_params = {
+    'lr': 1e-4,
+    'hidden_dims': (512, 512, 512),
+    'random_projection': RandomProjectionSRHT,
+    'random_projection_dim': 16,
+    'vae_params': {
+        'use_dropout': False,
+        'use_layernorm': False,
+        'dropout_rate': 0.0
+    }
+}
 
 
 # -------------------------
@@ -71,7 +85,8 @@ es = ES(
     solution=solution,
     optimizer=optax.adam(learning_rate=lr_schedule),
     std_schedule=std_schedule,
-    # use_best_individual_augmentation=True
+    use_best_individual_augmentation=True,
+    noise_model_params=noise_model_params
 )
 
 params = es.default_params
@@ -106,12 +121,20 @@ state = es.init(subkey, solution, params)
 # -------------------------
 # 8. Training loop
 # -------------------------
-for gen in range(num_generations):
-    key, subkey = jax.random.split(key)
-    (state, params), metrics = step((state, params), subkey)
+import traceback
 
-    # Logging
-    if (gen + 1) % 10 == 0:
-        mean = es.get_mean(state)
-        score = evaluate_population(mean[None])[0]
-        print(f"Gen {gen + 1:03d} | Best-so-far fitness: {score:.6f}")
+try:
+    for gen in range(num_generations):
+        key, subkey = jax.random.split(key)
+        (state, params), metrics = step((state, params), subkey)
+
+        # Logging
+        if (gen + 1) % 10 == 0:
+            mean = es.get_mean(state)
+            score = evaluate_population(mean[None])[0]
+            print(f"Gen {gen + 1:03d} | Best-so-far fitness: {score:.6f}")
+
+except Exception:
+    with open("error_log.txt", "w") as f:
+        traceback.print_exc(file=f)
+    raise

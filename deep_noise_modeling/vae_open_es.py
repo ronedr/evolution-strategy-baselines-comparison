@@ -41,6 +41,9 @@ class State(BaseState):
     # Top-k buffer
     top_k_solutions: jax.Array
     top_k_fitness: jax.Array
+    top_k_count: jax.Array
+
+    noise_proj_params: Any
 
 
 @struct.dataclass
@@ -100,7 +103,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
     def _init(self, key: jax.Array, params: Params) -> State:
         key, sub = jax.random.split(key)
-        noise_state = self.deep_noise_model.init(sub)
+        noise_state, noise_proj_params = self.deep_noise_model.init(sub)
 
         state = State(
             mean=jnp.full((self.num_dims,), jnp.nan),
@@ -110,17 +113,19 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             best_fitness=jnp.inf,
             generation_counter=0,
             noise_state=noise_state,
+            noise_proj_params=noise_proj_params,
 
             noise_log_prob=jnp.zeros((self.population_size,)),
             noise_aux_mu=jnp.zeros((
-                                   self.population_size if not self.use_antithetic_sampling else self.population_size // 2,
-                                   self.num_dims)),
+                self.population_size if not self.use_antithetic_sampling else self.population_size // 2,
+                self.num_dims)),
             noise_aux_std=jnp.ones((
-                                   self.population_size if not self.use_antithetic_sampling else self.population_size // 2,
-                                   self.num_dims)),
+                self.population_size if not self.use_antithetic_sampling else self.population_size // 2,
+                self.num_dims)),
 
             top_k_solutions=jnp.zeros((self.top_k_ind_aug, self.num_dims)),
             top_k_fitness=jnp.full((self.top_k_ind_aug,), jnp.inf),
+            top_k_count=jnp.array(0, dtype=jnp.int32),
         )
         return state
 
@@ -133,11 +138,19 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         features = state.mean[None, :]
 
-        if self.use_antithetic_sampling:
+        z, logp, aux = self.get_noise_from_features(features, key, state, self.use_antithetic_sampling)
+
+        population = state.mean + z
+        state = state.replace(noise_log_prob=logp, noise_aux_mu=aux["mu"], noise_aux_std=aux["std"])
+        return population, state
+
+    def get_noise_from_features(self, features, key, state, use_antithetic_sampling):
+        if use_antithetic_sampling:
             pop_half = self.population_size // 2
 
             z_plus, logp_plus, aux, key = self.deep_noise_model.generate_noise(
                 state.noise_state,
+                state.noise_proj_params,
                 key,
                 features=features,
                 shape=(pop_half, self.num_dims),
@@ -149,14 +162,12 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         else:
             z, logp, aux, key = self.deep_noise_model.generate_noise(
                 state.noise_state,
+                state.noise_proj_params,
                 key,
                 features=features,
                 shape=(self.population_size, self.num_dims),
             )
-
-        population = state.mean + z
-        state = state.replace(noise_log_prob=logp, noise_aux_mu=aux["mu"], noise_aux_std=aux["std"])
-        return population, state
+        return z, logp, aux
 
     def tell(
             self,
@@ -166,6 +177,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             state: State,
             params: Params,
     ) -> tuple[State, Any]:
+
         # Update top-k buffer using RAW fitness
         # Concatenate current top-k with new population
 
@@ -184,18 +196,22 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         new_top_k_solutions = all_solutions[top_k_indices]
         new_top_k_fitness = all_fitness[top_k_indices]
 
+        new_top_k_count = jnp.minimum(state.top_k_count + self.population_size, self.top_k_ind_aug)
+
         state = state.replace(
             top_k_solutions=new_top_k_solutions,
             top_k_fitness=new_top_k_fitness,
+            top_k_count=new_top_k_count,
         )
 
         return super().tell(key, population, fitness, state, params)
 
-    def add_best_individual_augmentation(self, key, state, population):
+    def add_best_individual_augmentation(self, key, state, population, recalculate_mu_std=True):
         # Sample from top-k
         # We sample one top-k individual for EACH individual in the population
         pop_size = population.shape[0]
-        idx = jax.random.randint(key, shape=(pop_size,), minval=0, maxval=self.top_k_ind_aug)
+        # Only sample from valid top-k entries
+        idx = jax.random.randint(key, shape=(pop_size,), minval=0, maxval=state.top_k_count)
 
         best_individual = state.top_k_solutions[idx]  # (pop_size, num_dims)
 
@@ -203,17 +219,27 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         sampled_fitness = state.top_k_fitness[idx]  # (pop_size,)
 
         delta_from_best_individual = population - best_individual  # (pop_size, num_dims)
-        state_vae_mu = state.noise_aux_mu
-        state_vae_std = state.noise_aux_std
 
-        # in antithetic sampling the sampling is symmetric, so we need to duplicate the mu and std
-        if self.use_antithetic_sampling:
-            state_vae_mu = jnp.concatenate([state_vae_mu, state_vae_mu])
-            state_vae_std = jnp.concatenate([state_vae_std, state_vae_std])
+        if recalculate_mu_std:
+            features = population
+            _, _, aux = self.get_noise_from_features(features, key, state, use_antithetic_sampling=False)
+            state_vae_mu = aux["mu"]
+            state_vae_std = aux["std"]
+
+        else:
+            state_vae_mu = state.noise_aux_mu
+            state_vae_std = state.noise_aux_std
+
+            # in antithetic sampling the sampling is symmetric, so we need to duplicate the mu and std
+
+            if self.use_antithetic_sampling:
+                state_vae_mu = jnp.concatenate([state_vae_mu, state_vae_mu])
+                state_vae_std = jnp.concatenate([state_vae_std, state_vae_std])
 
         logprobs_for_noise_delta = gaussian_log_prob(
             state_vae_mu, state_vae_std, delta_from_best_individual
         )
+
         # reshape best fitness to popsize and scale by alpha
         # sampled_fitness is already (pop_size,)
         shaped_best_fitness = self.alpha * sampled_fitness
@@ -267,9 +293,12 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             )
         else:
             rng, key = jax.random.split(key)
-            aug_rewards, logprobs_for_noise_delta = self.add_best_individual_augmentation(rng, state, population)
-            cat_rewards = jnp.concatenate([rewards, aug_rewards])
-            cat_log_probs = jnp.concatenate([state.noise_log_prob, logprobs_for_noise_delta])
+            aug_rewards, logprobs_for_noise_delta = self.add_best_individual_augmentation(rng, state, population,
+                                                                                          recalculate_mu_std=True)
+            aug_rewards_no_recalc, logprobs_no_recalcs = self.add_best_individual_augmentation(rng, state, population,
+                                                                                               recalculate_mu_std=False)
+            cat_rewards = jnp.concatenate([rewards, aug_rewards, aug_rewards_no_recalc])
+            cat_log_probs = jnp.concatenate([state.noise_log_prob, logprobs_for_noise_delta, logprobs_no_recalcs])
             new_noise_state, _ = self.deep_noise_model.update(
                 state.noise_state,
                 cat_log_probs,

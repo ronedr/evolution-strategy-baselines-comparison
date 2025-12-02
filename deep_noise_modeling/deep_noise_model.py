@@ -45,7 +45,7 @@ class DeepNoiseModel:
         self.random_projection_dim = random_projection_dim
         self.projection = random_projection(input_dim=input_dim,
                                             output_dim=random_projection_dim) if use_random_projection else None
-        self.proj_params = None
+
         self.encoder = VAEEncoder(
             input_dim=input_dim if not use_random_projection else random_projection_dim,
             latent_dim=latent_dim,
@@ -60,24 +60,29 @@ class DeepNoiseModel:
         """Returns TrainState, with no Python-side mutation."""
         dummy = jnp.zeros((1, self.input_dim if not self.use_random_projection else self.random_projection_dim))
         variables = self.encoder.init(rng, dummy)
-        return TrainState.create(
+        
+        proj_params = None
+        if self.use_random_projection:
+            dummy_proj = jnp.zeros((1, self.input_dim))
+            proj_params = self.projection.init(rng, dummy_proj)
+
+        train_state = TrainState.create(
             apply_fn=self.encoder.apply,
             params=variables["params"],
             tx=self.tx,
         )
+        return train_state, proj_params
 
     @functools.partial(jax.jit, static_argnames=("self", "shape"))
-    def generate_noise(self, noise_state, rng, features, shape):
+    def generate_noise(self, noise_state, proj_params, rng, features, shape):
         """
         noise_state: TrainState (carried in ES.State)
+        proj_params: Projection parameters (carried in ES.State)
         features: (batch, input_dim)
         shape: (popsize, num_dims)
         """
-        if self.proj_params is None and self.use_random_projection:
-            self.proj_params = self.projection.init(rng, features)
-
         if self.use_random_projection:
-            features = self.projection.apply(self.proj_params, features)
+            features = self.projection.apply(proj_params, features)
 
         mu, std, _ = noise_state.apply_fn(
             {"params": noise_state.params},
