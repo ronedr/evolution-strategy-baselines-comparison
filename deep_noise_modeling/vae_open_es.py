@@ -293,9 +293,12 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             )
         else:
             rng, key = jax.random.split(key)
-            aug_rewards, logprobs_for_noise_delta = self.add_best_individual_augmentation(rng, state, population)
-            cat_rewards = jnp.concatenate([rewards, aug_rewards])
-            cat_log_probs = jnp.concatenate([state.noise_log_prob, logprobs_for_noise_delta])
+            aug_rewards, logprobs_for_noise_delta = self.add_best_individual_augmentation(rng, state, population,
+                                                                                          recalculate_mu_std=True)
+            aug_rewards_no_recalc, logprobs_no_recalcs = self.add_best_individual_augmentation(rng, state, population,
+                                                                                               recalculate_mu_std=False)
+            cat_rewards = jnp.concatenate([rewards, aug_rewards, aug_rewards_no_recalc])
+            cat_log_probs = jnp.concatenate([state.noise_log_prob, logprobs_for_noise_delta, logprobs_no_recalcs])
             new_noise_state, _ = self.deep_noise_model.update(
                 state.noise_state,
                 cat_log_probs,
