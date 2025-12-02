@@ -71,7 +71,7 @@ es = ES(
     solution=solution,
     optimizer=optax.adam(learning_rate=lr_schedule),
     std_schedule=std_schedule,
-    # use_best_individual_augmentation=True
+    use_best_individual_augmentation=True
 )
 
 params = es.default_params

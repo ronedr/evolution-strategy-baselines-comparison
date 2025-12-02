@@ -113,11 +113,11 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
             noise_log_prob=jnp.zeros((self.population_size,)),
             noise_aux_mu=jnp.zeros((
-                                   self.population_size if not self.use_antithetic_sampling else self.population_size // 2,
-                                   self.num_dims)),
+                self.population_size if not self.use_antithetic_sampling else self.population_size // 2,
+                self.num_dims)),
             noise_aux_std=jnp.ones((
-                                   self.population_size if not self.use_antithetic_sampling else self.population_size // 2,
-                                   self.num_dims)),
+                self.population_size if not self.use_antithetic_sampling else self.population_size // 2,
+                self.num_dims)),
 
             top_k_solutions=jnp.zeros((self.top_k_ind_aug, self.num_dims)),
             top_k_fitness=jnp.full((self.top_k_ind_aug,), jnp.inf),
@@ -133,7 +133,14 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         features = state.mean[None, :]
 
-        if self.use_antithetic_sampling:
+        z, logp, aux = self.get_noise_from_features(features, key, state, self.use_antithetic_sampling)
+
+        population = state.mean + z
+        state = state.replace(noise_log_prob=logp, noise_aux_mu=aux["mu"], noise_aux_std=aux["std"])
+        return population, state
+
+    def get_noise_from_features(self, features, key, state, use_antithetic_sampling):
+        if use_antithetic_sampling:
             pop_half = self.population_size // 2
 
             z_plus, logp_plus, aux, key = self.deep_noise_model.generate_noise(
@@ -153,10 +160,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
                 features=features,
                 shape=(self.population_size, self.num_dims),
             )
-
-        population = state.mean + z
-        state = state.replace(noise_log_prob=logp, noise_aux_mu=aux["mu"], noise_aux_std=aux["std"])
-        return population, state
+        return z, logp, aux
 
     def tell(
             self,
@@ -166,6 +170,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             state: State,
             params: Params,
     ) -> tuple[State, Any]:
+
         # Update top-k buffer using RAW fitness
         # Concatenate current top-k with new population
 
@@ -191,7 +196,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         return super().tell(key, population, fitness, state, params)
 
-    def add_best_individual_augmentation(self, key, state, population):
+    def add_best_individual_augmentation(self, key, state, population, recalculate_mu_std=True):
         # Sample from top-k
         # We sample one top-k individual for EACH individual in the population
         pop_size = population.shape[0]
@@ -203,17 +208,27 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         sampled_fitness = state.top_k_fitness[idx]  # (pop_size,)
 
         delta_from_best_individual = population - best_individual  # (pop_size, num_dims)
-        state_vae_mu = state.noise_aux_mu
-        state_vae_std = state.noise_aux_std
 
-        # in antithetic sampling the sampling is symmetric, so we need to duplicate the mu and std
-        if self.use_antithetic_sampling:
-            state_vae_mu = jnp.concatenate([state_vae_mu, state_vae_mu])
-            state_vae_std = jnp.concatenate([state_vae_std, state_vae_std])
+        if recalculate_mu_std:
+            features = population
+            _, _, aux = self.get_noise_from_features(features, key, state, use_antithetic_sampling=False)
+            state_vae_mu = aux["mu"]
+            state_vae_std = aux["std"]
+
+        else:
+            state_vae_mu = state.noise_aux_mu
+            state_vae_std = state.noise_aux_std
+
+            # in antithetic sampling the sampling is symmetric, so we need to duplicate the mu and std
+
+            if self.use_antithetic_sampling:
+                state_vae_mu = jnp.concatenate([state_vae_mu, state_vae_mu])
+                state_vae_std = jnp.concatenate([state_vae_std, state_vae_std])
 
         logprobs_for_noise_delta = gaussian_log_prob(
             state_vae_mu, state_vae_std, delta_from_best_individual
         )
+
         # reshape best fitness to popsize and scale by alpha
         # sampled_fitness is already (pop_size,)
         shaped_best_fitness = self.alpha * sampled_fitness
