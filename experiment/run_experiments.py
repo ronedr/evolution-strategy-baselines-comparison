@@ -12,7 +12,7 @@ from experiment.utils.problem_utils import get_problem_name
 
 def run_experiment_permutations(problems: List[Problem], es_dict: dict, num_generations: int, population_size: int,
                                 result_dir: str, run_again_if_exist: bool = False, seeds: list[int] = None,
-                                log_period: int = 10, eval_batch_size=None):
+                                log_period: int = 10, eval_batch_size: int | None = None, suffix_experiment_name: str=""):
     if seeds is None:
         seeds = list(range(0, 5))
 
@@ -38,6 +38,7 @@ def run_experiment_permutations(problems: List[Problem], es_dict: dict, num_gene
                         log_period=log_period,
                         eval_batch_size=eval_batch_size,
                         seed=seed,
+                        suffix_experiment_name=suffix_experiment_name
                     )
 
                     path = experiment.get_experiment_path_file()  # or experiment.metrics.experiment_path_file()

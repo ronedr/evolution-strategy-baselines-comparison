@@ -25,12 +25,14 @@ class Experiment:
             results_dir_path: str,
             seed: int,
             log_period: int,
+            suffix_experiment_name: str = "",
             eval_batch_size: int | None = None,
     ):
         self._seed = seed
         self._problem = problem
         self._algorithm = algorithm
         self._results_dir_path = results_dir_path
+        self._suffix_experiment_name = suffix_experiment_name
         self._minimize_fitness = isinstance(problem, GymnaxProblem) or isinstance(problem, BraxProblem)
         self.eval_batch_size = eval_batch_size if eval_batch_size is not None else self._algorithm.population_size
         self.log_period = log_period
@@ -77,7 +79,7 @@ class Experiment:
         return os.path.exists(f"{self.get_experiment_path_file()}.json")
 
     def get_experiment_path_file(self) -> str:
-        folder_path = f"{self._results_dir_path}/{get_problem_name(self._problem)}/{self._algorithm.__class__.__name__}"
+        folder_path = f"{self._results_dir_path}/{get_problem_name(self._problem)}/{self._algorithm.__class__.__name__}_{self._suffix_experiment_name}"
         os.makedirs(folder_path, exist_ok=True)
         return f"{folder_path}/{self._seed}"
 
