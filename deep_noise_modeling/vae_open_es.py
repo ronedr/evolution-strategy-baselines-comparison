@@ -21,8 +21,10 @@ from evosax.algorithms.distribution_based.base import (
     State as BaseState,
     metrics_fn,
 )
+from jax._src.flatten_util import ravel_pytree
+
 from deep_noise_model import DeepNoiseModel, gaussian_log_prob
-from evosax.algorithms import EvoTF_ES
+from evosax.algorithms import EvoTF_ES, Open_ES
 
 @struct.dataclass
 class State(BaseState):
@@ -158,7 +160,13 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
     ) -> tuple[State, Any]:
         # Update top-k buffer using RAW fitness
         # Concatenate current top-k with new population
-        all_solutions = jnp.concatenate([state.top_k_solutions, population], axis=0)
+
+        if type(population) is dict:
+            flat_population = jax.vmap(lambda ind: ravel_pytree(ind)[0])(population)
+            all_solutions = jnp.concatenate([state.top_k_solutions, flat_population], axis=0)
+        else:
+            all_solutions = jnp.concatenate([state.top_k_solutions, population], axis=0)
+
         all_fitness = jnp.concatenate([state.top_k_fitness, fitness], axis=0)
 
         # Find top-k indices (smallest fitness)
