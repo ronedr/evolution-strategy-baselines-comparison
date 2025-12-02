@@ -258,6 +258,88 @@ See `running_algorithms_main/hyperparamter_tuning.ipynb` for examples.
 
 For Brax environments, the framework automatically generates GIF visualizations of the best policy found.
 
+### 4. Organizing Experiments with Custom Suffixes
+
+The `suffix_experiment_name` parameter allows you to organize experiment results by adding custom identifiers to folder names. This is particularly useful when running experiments with different hyperparameters.
+
+```python
+from experiment.experiment import Experiment
+
+# Run experiment with custom suffix for organization
+exp = Experiment(
+    problem=problem,
+    algorithm=algorithm,
+    results_dir_path="results",
+    seed=0,
+    log_period=10,
+    suffix_experiment_name="500_1000"  # e.g., "{population_size}_{num_dims}"
+)
+metrics = exp.run(num_generations=1000)
+```
+
+**Result folder structure:**
+
+```
+results/
+├── BBOBProblem/
+│   └── sphere/
+│       ├── CMA_ES_500_1000/      # With suffix
+│       │   ├── 0.json
+│       │   ├── 1.json
+│       │   └── ...
+│       ├── CMA_ES_500_2000/      # Different parameters
+│       └── CMA_ES/               # Without suffix (legacy)
+```
+
+### 5. Filtering Experiment Results
+
+Use the result filtering utilities to find specific experiment runs:
+
+```python
+from experiment.utils.result_filter_utils import (
+    filter_algorithm_folders,
+    get_unique_parameter_values,
+    filter_by_named_params
+)
+
+# Get all CMA_ES results with population_size=500 and num_dims=1000
+folders = filter_algorithm_folders(
+    results_dir="results",
+    problem_group="BBOBProblem",
+    problem_name="sphere",
+    algorithms=["CMA_ES"],
+    param_filters=["500", "1000"]
+)
+# Returns: ['BBOBProblem/sphere/CMA_ES_500_1000']
+
+# Get all algorithms with population_size=500, any num_dims
+folders = filter_algorithm_folders(
+    results_dir="results",
+    problem_group="BBOBProblem",
+    problem_name="sphere",
+    param_filters=["500", None]  # None = accept any value
+)
+# Returns: ['BBOBProblem/sphere/CMA_ES_500_1000',
+#           'BBOBProblem/sphere/CMA_ES_500_2000', ...]
+
+# Discover all unique parameter values
+population_sizes = get_unique_parameter_values(
+    results_dir="results",
+    problem_group="BBOBProblem",
+    problem_name="sphere",
+    param_index=0  # First parameter position
+)
+# Returns: ['10', '500']
+
+num_dims = get_unique_parameter_values(
+    results_dir="results",
+    problem_group="BBOBProblem",
+    problem_name="sphere",
+    param_index=1  # Second parameter position
+)
+# Returns: ['10', '1000', '2000', '5000', '10000']
+```
+
 ## 🔬 Research Reference
 
 This framework is inspired by and builds upon research in evolution strategies, particularly:
