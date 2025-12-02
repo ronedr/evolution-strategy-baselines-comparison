@@ -63,7 +63,8 @@ class DeepNoiseModel:
         
         proj_params = None
         if self.use_random_projection:
-             proj_params = self.projection.init(rng, dummy)
+            dummy_proj = jnp.zeros((1, self.input_dim))
+            proj_params = self.projection.init(rng, dummy_proj)
 
         train_state = TrainState.create(
             apply_fn=self.encoder.apply,

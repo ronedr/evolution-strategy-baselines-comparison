@@ -15,7 +15,7 @@ from vae_open_es import VAE_Open_ES as ES
 fn_name = "sphere"  # <-- change this to: rastrigin, rosenbrock, bent_cigar, etc.
 bbob_fn = bbob_fns[fn_name]
 
-num_dims = 16  # dimensionality of the challenge
+num_dims = 100  # dimensionality of the challenge
 POPULATION_SIZE = 6
 num_generations = 100
 noise_model_params = {
