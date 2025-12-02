@@ -61,7 +61,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             use_best_individual_augmentation: bool = False,
             alpha=0.1,
             normalize_fitness_score=False,
-            top_k_ind_aug: int = 200,
+            top_k_ind_aug: int = 100,
     ):
 
         """Initialize OpenAI-ES."""
@@ -144,7 +144,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
                 shape=(self.population_size, self.num_dims),
             )
 
-        population = state.mean + state.std * z
+        population = state.mean + z
         state = state.replace(noise_log_prob=logp, noise_aux_mu=aux["mu"], noise_aux_std=aux["std"])
         return population, state
 
