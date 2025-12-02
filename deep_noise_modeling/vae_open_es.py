@@ -111,9 +111,9 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             generation_counter=0,
             noise_state=noise_state,
 
-            noise_log_prob=jnp.zeros((1,)),
-            noise_aux_mu=jnp.zeros((1, self.num_dims)),
-            noise_aux_std=jnp.ones((1, self.num_dims)),
+            noise_log_prob=jnp.zeros((self.population_size,)),
+            noise_aux_mu=jnp.zeros((self.population_size, self.num_dims)),
+            noise_aux_std=jnp.ones((self.population_size, self.num_dims)),
 
             top_k_solutions=jnp.zeros((self.top_k_ind_aug, self.num_dims)),
             top_k_fitness=jnp.full((self.top_k_ind_aug,), jnp.inf),
