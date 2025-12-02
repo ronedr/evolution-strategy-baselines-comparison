@@ -32,7 +32,7 @@ class DeepNoiseModel:
     ):
 
         if vae_params is None:
-            vae_params = {'use_layernorm': False, 'use_dropout': True, 'dropout_rate': 0.05}
+            vae_params = {'use_layernorm': False, 'use_dropout': False, 'dropout_rate': 0.05}
 
         use_random_projection = random_projection is not None
         if use_random_projection:
