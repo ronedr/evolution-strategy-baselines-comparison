@@ -1,0 +1,28 @@
+jax.errors.SimplifiedTraceback: For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\runner_bbob.py", line 129, in <module>
+    (state, params), metrics = step((state, params), subkey)
+  File "C:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\runner_bbob.py", line 110, in step
+    state, metrics = es.tell(key_tell, population, fitness, state, params)
+  File "C:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\vae_open_es.py", line 202, in tell
+    return super().tell(key, population, fitness, state, params)
+jax.errors.UnexpectedTracerError: Encountered an unexpected tracer. A function transformed by JAX had a side effect, allowing for a reference to an intermediate value with type float32[16] wrapped in a DynamicJaxprTracer to escape the scope of the transformation.
+JAX transformations require that functions explicitly return their outputs, and disallow saving intermediate values to global state.
+The function being traced when the value leaked was generate_noise at C:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\deep_noise_model.py:69 traced for jit.
+------------------------------
+The leaked intermediate value was created on line c:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\projections\srht_random_projection.py:87 (diag_init). 
+------------------------------
+When the value was created, the final 5 stack frames (most recent last) excluding JAX-internal frames were:
+------------------------------
+C:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\vae_open_es.py:148 (get_noise_from_features)
+C:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\deep_noise_model.py:77 (generate_noise)
+c:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\projections\stacked_srht.py:50 (__call__)
+c:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\projections\srht_random_projection.py:89 (__call__)
+c:\Users\eliad\PycharmProjects\evolution-strategy-baselines-comparison\deep_noise_modeling\projections\srht_random_projection.py:87 (diag_init)
+------------------------------
+
+To catch the leak earlier, try setting the environment variable JAX_CHECK_TRACER_LEAKS or using the `jax.checking_leaks` context manager.
+See https://docs.jax.dev/en/latest/errors.html#jax.errors.UnexpectedTracerError

@@ -41,6 +41,9 @@ class State(BaseState):
     # Top-k buffer
     top_k_solutions: jax.Array
     top_k_fitness: jax.Array
+    top_k_count: jax.Array
+
+    noise_proj_params: Any
 
 
 @struct.dataclass
@@ -100,7 +103,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
     def _init(self, key: jax.Array, params: Params) -> State:
         key, sub = jax.random.split(key)
-        noise_state = self.deep_noise_model.init(sub)
+        noise_state, noise_proj_params = self.deep_noise_model.init(sub)
 
         state = State(
             mean=jnp.full((self.num_dims,), jnp.nan),
@@ -110,6 +113,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             best_fitness=jnp.inf,
             generation_counter=0,
             noise_state=noise_state,
+            noise_proj_params=noise_proj_params,
 
             noise_log_prob=jnp.zeros((self.population_size,)),
             noise_aux_mu=jnp.zeros((
@@ -121,6 +125,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
             top_k_solutions=jnp.zeros((self.top_k_ind_aug, self.num_dims)),
             top_k_fitness=jnp.full((self.top_k_ind_aug,), jnp.inf),
+            top_k_count=jnp.array(0, dtype=jnp.int32),
         )
         return state
 
@@ -145,6 +150,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
             z_plus, logp_plus, aux, key = self.deep_noise_model.generate_noise(
                 state.noise_state,
+                state.noise_proj_params,
                 key,
                 features=features,
                 shape=(pop_half, self.num_dims),
@@ -156,6 +162,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         else:
             z, logp, aux, key = self.deep_noise_model.generate_noise(
                 state.noise_state,
+                state.noise_proj_params,
                 key,
                 features=features,
                 shape=(self.population_size, self.num_dims),
@@ -189,9 +196,12 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         new_top_k_solutions = all_solutions[top_k_indices]
         new_top_k_fitness = all_fitness[top_k_indices]
 
+        new_top_k_count = jnp.minimum(state.top_k_count + self.population_size, self.top_k_ind_aug)
+
         state = state.replace(
             top_k_solutions=new_top_k_solutions,
             top_k_fitness=new_top_k_fitness,
+            top_k_count=new_top_k_count,
         )
 
         return super().tell(key, population, fitness, state, params)
@@ -200,7 +210,8 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         # Sample from top-k
         # We sample one top-k individual for EACH individual in the population
         pop_size = population.shape[0]
-        idx = jax.random.randint(key, shape=(pop_size,), minval=0, maxval=self.top_k_ind_aug)
+        # Only sample from valid top-k entries
+        idx = jax.random.randint(key, shape=(pop_size,), minval=0, maxval=state.top_k_count)
 
         best_individual = state.top_k_solutions[idx]  # (pop_size, num_dims)
 

@@ -121,12 +121,20 @@ state = es.init(subkey, solution, params)
 # -------------------------
 # 8. Training loop
 # -------------------------
-for gen in range(num_generations):
-    key, subkey = jax.random.split(key)
-    (state, params), metrics = step((state, params), subkey)
+import traceback
 
-    # Logging
-    if (gen + 1) % 10 == 0:
-        mean = es.get_mean(state)
-        score = evaluate_population(mean[None])[0]
-        print(f"Gen {gen + 1:03d} | Best-so-far fitness: {score:.6f}")
+try:
+    for gen in range(num_generations):
+        key, subkey = jax.random.split(key)
+        (state, params), metrics = step((state, params), subkey)
+
+        # Logging
+        if (gen + 1) % 10 == 0:
+            mean = es.get_mean(state)
+            score = evaluate_population(mean[None])[0]
+            print(f"Gen {gen + 1:03d} | Best-so-far fitness: {score:.6f}")
+
+except Exception:
+    with open("error_log.txt", "w") as f:
+        traceback.print_exc(file=f)
+    raise
