@@ -22,7 +22,7 @@ from evosax.algorithms.distribution_based.base import (
     metrics_fn,
 )
 from deep_noise_model import DeepNoiseModel, gaussian_log_prob
-
+from evosax.algorithms import EvoTF_ES
 
 @struct.dataclass
 class State(BaseState):

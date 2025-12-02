@@ -8,6 +8,8 @@ from flax.training.train_state import TrainState
 from flax import struct
 
 from vae_flax import VAEEncoder
+
+
 # from projections.srht_random_projection import SRHT_Projection_Padded
 # from projections.count_sketch_projection import CountSketch_Projection as random_projection
 
@@ -16,9 +18,6 @@ def gaussian_log_prob(mu, std, x):
     var = std ** 2 + 1e-8
     return -0.5 * (jnp.log(2 * jnp.pi * var) + (x - mu) ** 2 / var).sum(axis=-1)
 
-
-class TrainState(TrainState):
-    batch_stats: Any
 
 class DeepNoiseModel:
     def __init__(
@@ -46,7 +45,7 @@ class DeepNoiseModel:
             input_dim=input_dim if not use_random_projection else random_projection_dim,
             latent_dim=latent_dim,
             hidden_dims=hidden_dims,
-            use_batchnorm=True,
+            use_layernorm=True,
             use_dropout=True,
             dropout_rate=0.05,
         )
@@ -61,7 +60,6 @@ class DeepNoiseModel:
         return TrainState.create(
             apply_fn=self.encoder.apply,
             params=variables["params"],
-            batch_stats=variables["batch_stats"],
             tx=self.tx,
         )
 
@@ -79,7 +77,7 @@ class DeepNoiseModel:
             features = self.projection.apply(self.proj_params, features)
 
         mu, std, _ = noise_state.apply_fn(
-            {"params": noise_state.params, "batch_stats": noise_state.batch_stats},
+            {"params": noise_state.params},
             features
         )
 
