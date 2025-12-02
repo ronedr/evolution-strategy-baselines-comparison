@@ -190,6 +190,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         state_vae_mu = state.noise_aux_mu
         state_vae_std = state.noise_aux_std
 
+        # in antithetic sampling the sampling is symmetric, so we need to duplicate the mu and std
         if self.use_antithetic_sampling:
             state_vae_mu = jnp.concatenate([state_vae_mu, state_vae_mu])
             state_vae_std = jnp.concatenate([state_vae_std, state_vae_std])
