@@ -26,20 +26,21 @@ from jax._src.flatten_util import ravel_pytree
 from deep_noise_model import DeepNoiseModel, gaussian_log_prob
 from evosax.algorithms import EvoTF_ES, Open_ES
 
+
 @struct.dataclass
 class State(BaseState):
     mean: jax.Array
     std: jax.Array
     opt_state: optax.OptState
 
-    noise_log_prob: jax.Array | None = None
-    noise_state: Any = None  # TrainState for DeepNoiseModel
-    noise_aux_mu: jax.Array | None = None
-    noise_aux_std: jax.Array | None = None
+    noise_log_prob: jax.Array
+    noise_state: Any
+    noise_aux_mu: jax.Array
+    noise_aux_std: jax.Array
 
     # Top-k buffer
-    top_k_solutions: jax.Array | None = None
-    top_k_fitness: jax.Array | None = None
+    top_k_solutions: jax.Array
+    top_k_fitness: jax.Array
 
 
 @struct.dataclass
@@ -110,7 +111,10 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             generation_counter=0,
             noise_state=noise_state,
 
-            noise_log_prob=None,
+            noise_log_prob=jnp.zeros((1,)),
+            noise_aux_mu=jnp.zeros((1, self.num_dims)),
+            noise_aux_std=jnp.ones((1, self.num_dims)),
+
             top_k_solutions=jnp.zeros((self.top_k_ind_aug, self.num_dims)),
             top_k_fitness=jnp.full((self.top_k_ind_aug,), jnp.inf),
         )
