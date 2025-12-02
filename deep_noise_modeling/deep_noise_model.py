@@ -28,7 +28,12 @@ class DeepNoiseModel:
             lr=1e-4,
             random_projection=None,
             random_projection_dim=None,
+            vae_params=None
     ):
+
+        if vae_params is None:
+            vae_params = {'use_layernorm': False, 'use_dropout': True, 'dropout_rate': 0.05}
+
         use_random_projection = random_projection is not None
         if use_random_projection:
             assert random_projection_dim is not None, "random_projection_dim must be specified"
@@ -45,9 +50,7 @@ class DeepNoiseModel:
             input_dim=input_dim if not use_random_projection else random_projection_dim,
             latent_dim=latent_dim,
             hidden_dims=hidden_dims,
-            use_layernorm=True,
-            use_dropout=True,
-            dropout_rate=0.05,
+            **vae_params
         )
 
         self.tx = optax.adam(lr)
