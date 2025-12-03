@@ -294,7 +294,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
 
         # REINFORCE loss to update noise model
         if self.normalize_fitness_score:
-            rewards = -(fitness - fitness.mean())
+            rewards = -(fitness - fitness.mean()) / (fitness.std() + 1e-8)
         else:
             rewards = -fitness
 
