@@ -11,26 +11,15 @@ evosax==0.2.0
 brax==0.12.4
 gymnax==0.0.9
 gymnasium==1.2.0
-# Core JAX and ML libraries
-jax==0.5.1
-jaxlib==0.5.1
-optax==0.2.4
-flax==0.10.6
-
-# Evolution Strategy library
-evosax==0.2.0
-
-# RL Environments
-brax==0.12.4
-gymnax==0.0.9
-gymnasium==1.2.0
 
 # Vision/ML datasets
 torchvision==0.23.0
 torch==2.8.0
 
-# Utilities
+# Data analysis and visualization
 numpy>=1.24.0,<2.0  # Keep at 1.x for compatibility with pandas and other packages
+pandas>=2.0.0
+plotly>=5.0.0
 tqdm>=4.67.1
 
 # Jupyter notebook support (optional, for running notebooks)

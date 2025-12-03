@@ -45,7 +45,7 @@ def parse_algorithm_folder_name(folder_name: str) -> Dict[str, Any]:
 def filter_algorithm_folders(
     results_dir: str,
     problem_group: str,
-    problem_name: str,
+    problem_name: Optional[str] = None,
     algorithms: Optional[List[str]] = None,
     param_filters: Optional[List[Optional[str]]] = None
 ) -> List[str]:
@@ -59,7 +59,8 @@ def filter_algorithm_folders(
     Args:
         results_dir: Path to results directory (e.g., "results")
         problem_group: Problem group name (e.g., "BBOBProblem", "GymnaxProblem")
-        problem_name: Specific problem name (e.g., "sphere", "bent_cigar")
+        problem_name: Specific problem name (e.g., "sphere", "bent_cigar"). 
+                     If None, searches across all problems in the problem_group.
         algorithms: List of algorithm names to filter by. If None, returns all algorithms.
         param_filters: List of parameter values to match positionally.
                       - Each element filters the corresponding parameter position
@@ -83,7 +84,39 @@ def filter_algorithm_folders(
         >>> filter_algorithm_folders("results", "BBOBProblem", "sphere",
         ...                          param_filters=["500", None])
         ['BBOBProblem/sphere/CMA_ES_500_1000', 'BBOBProblem/sphere/CMA_ES_500_2000', ...]
+        
+        # Get all algorithms across all problems in BBOBProblem group
+        >>> filter_algorithm_folders("results", "BBOBProblem", problem_name=None)
+        ['BBOBProblem/sphere/CMA_ES_500_1000', 'BBOBProblem/bent_cigar/Open_ES_500_1000', ...]
+        
+        # Get all results for a specific algorithm across all problems
+        >>> filter_algorithm_folders("results", "BBOBProblem", problem_name=None, 
+        ...                          algorithms=["CMA_ES"])
+        ['BBOBProblem/sphere/CMA_ES_500_1000', 'BBOBProblem/bent_cigar/CMA_ES_500_1000', ...]
     """
+    # If problem_name is None, search across all problems in the problem_group
+    if problem_name is None:
+        group_path = os.path.join(results_dir, problem_group)
+        
+        if not os.path.exists(group_path):
+            return []
+        
+        # Get all problem folders
+        problem_folders = [f for f in os.listdir(group_path) 
+                          if os.path.isdir(os.path.join(group_path, f))]
+        
+        # Recursively call this function for each problem
+        all_matching_folders = []
+        for problem in problem_folders:
+            matching = filter_algorithm_folders(
+                results_dir, problem_group, problem, 
+                algorithms=algorithms, param_filters=param_filters
+            )
+            all_matching_folders.extend(matching)
+        
+        return sorted(all_matching_folders)
+    
+    # Original logic for when problem_name is specified
     problem_path = os.path.join(results_dir, problem_group, problem_name)
     
     if not os.path.exists(problem_path):
