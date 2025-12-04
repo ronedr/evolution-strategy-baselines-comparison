@@ -154,7 +154,6 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
                 key,
                 features=features,
                 shape=(pop_half, self.num_dims),
-                std=state.std
             )
 
             z = jnp.concatenate([z_plus, -z_plus])
@@ -167,7 +166,6 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
                 key,
                 features=features,
                 shape=(self.population_size, self.num_dims),
-                std=state.std
             )
         return z, logp, aux
 

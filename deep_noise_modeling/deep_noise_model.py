@@ -68,7 +68,7 @@ class DeepNoiseModel:
         return train_state, proj_params
 
     @functools.partial(jax.jit, static_argnames=("self", "shape"))
-    def generate_noise(self, noise_state, proj_params, rng, features, shape, std):
+    def generate_noise(self, noise_state, proj_params, rng, features, shape):
         """
         noise_state: TrainState (carried in ES.State)
         proj_params: Projection parameters (carried in ES.State)
@@ -78,7 +78,7 @@ class DeepNoiseModel:
         if self.use_random_projection:
             features = self.projection.apply(proj_params, features)
 
-        mu, _, _ = noise_state.apply_fn(
+        mu, std, _ = noise_state.apply_fn(
             {"params": noise_state.params},
             features
         )
