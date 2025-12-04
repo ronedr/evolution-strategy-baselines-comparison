@@ -278,15 +278,15 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             noise_sigma = jnp.concatenate([noise_sigma, noise_sigma])
             noise_mu = jnp.concatenate([noise_mu, noise_mu])
 
-        eps_centered = population - noise_mu  # (pop, dims)
-        eps_whitened = eps_centered / (noise_sigma ** 2)  # Σ⁻¹(ε - μ)
+        z = (population - state.mean - noise_mu) / noise_sigma
 
-        # dot: fitness (pop,)  x eps_whitened (pop,dims)  →  (dims,)
-        grad = jnp.dot(fitness, eps_whitened) / (self.population_size * state.std)
+        grad = jnp.dot(fitness, z / noise_sigma) / (
+                self.population_size
+        )
 
         # grad = jnp.dot(fitness, (population - state.mean) / state.std) / (
-        #         self.population_size * state.std
-        # )
+        #                 self.population_size * state.std
+        #         )
 
         # Update mean
         updates, opt_state = self.optimizer.update(grad, state.opt_state)
