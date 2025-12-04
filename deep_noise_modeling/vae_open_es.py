@@ -154,6 +154,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
                 key,
                 features=features,
                 shape=(pop_half, self.num_dims),
+                std=state.std
             )
 
             z = jnp.concatenate([z_plus, -z_plus])
@@ -166,6 +167,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
                 key,
                 features=features,
                 shape=(self.population_size, self.num_dims),
+                std=state.std
             )
         return z, logp, aux
 
@@ -275,17 +277,17 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         )
 
         # Compute grad
-        noise_mu, noise_sigma = self.get_vae_mu_std_from_state(state)
+        # noise_mu, noise_sigma = self.get_vae_mu_std_from_state(state)
+        #
+        # z = (population - state.mean - noise_mu) / noise_sigma
+        #
+        # grad = jnp.dot(fitness, z / noise_sigma) / (
+        #         self.population_size * state.std
+        # )
 
-        z = (population - state.mean - noise_mu) / noise_sigma
-
-        grad = jnp.dot(fitness, z / noise_sigma) / (
-                self.population_size * state.std
-        )
-
-        # grad = jnp.dot(fitness, (population - state.mean) / state.std) / (
-        #                 self.population_size * state.std
-        #         )
+        grad = jnp.dot(fitness, (population - state.mean) / state.std) / (
+                        self.population_size * state.std
+                )
 
         # Update mean
         updates, opt_state = self.optimizer.update(grad, state.opt_state)
