@@ -227,14 +227,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
             state_vae_std = aux["std"]
 
         else:
-            state_vae_mu = state.noise_aux_mu
-            state_vae_std = state.noise_aux_std
-
-            # in antithetic sampling the sampling is symmetric, so we need to duplicate the mu and std
-
-            if self.use_antithetic_sampling:
-                state_vae_mu = jnp.concatenate([state_vae_mu, state_vae_mu])
-                state_vae_std = jnp.concatenate([state_vae_std, state_vae_std])
+            state_vae_mu, state_vae_std = self.get_vae_mu_std_from_state(state)
 
         logprobs_for_noise_delta = gaussian_log_prob(
             state_vae_mu, state_vae_std, delta_from_best_individual
@@ -245,6 +238,17 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         shaped_best_fitness = self.alpha * sampled_fitness
         aug_rewards = -shaped_best_fitness
         return aug_rewards, logprobs_for_noise_delta
+
+    def get_vae_mu_std_from_state(self, state) -> tuple[Any, Any]:
+        state_vae_mu = state.noise_aux_mu
+        state_vae_std = state.noise_aux_std
+
+        # in antithetic sampling the sampling is symmetric, so we need to duplicate the mu and std
+
+        if self.use_antithetic_sampling:
+            state_vae_mu = jnp.concatenate([state_vae_mu, state_vae_mu])
+            state_vae_std = jnp.concatenate([state_vae_std, state_vae_std])
+        return state_vae_mu, state_vae_std
 
     def _tell(
             self,
@@ -271,12 +275,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         )
 
         # Compute grad
-        noise_mu = state.noise_aux_mu  # shape: (pop, dims)
-        noise_sigma = state.noise_aux_std  # shape: (pop, dims), per-sample std
-
-        if self.use_antithetic_sampling:
-            noise_sigma = jnp.concatenate([noise_sigma, noise_sigma])
-            noise_mu = jnp.concatenate([noise_mu, noise_mu])
+        noise_mu, noise_sigma = self.get_vae_mu_std_from_state(state)
 
         z = (population - state.mean - noise_mu) / noise_sigma
 
