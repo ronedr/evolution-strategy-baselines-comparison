@@ -281,7 +281,7 @@ class VAE_Open_ES(DistributionBasedAlgorithm):
         z = (population - state.mean - noise_mu) / noise_sigma
 
         grad = jnp.dot(fitness, z / noise_sigma) / (
-                self.population_size
+                self.population_size * state.std
         )
 
         # grad = jnp.dot(fitness, (population - state.mean) / state.std) / (
