@@ -6,6 +6,7 @@ from evosax.problems.bbob.bbob_fns import bbob_fns
 
 from deep_noise_modeling.projections.stacked_srht import RandomProjectionSRHT
 from vae_open_es import VAE_Open_ES as ES
+from evosax.algorithms import LearnedES
 
 # from evosax.algorithms import Open_ES as ES
 
